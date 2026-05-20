@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Abrace Deus</title>
+    <meta
+      name="description"
+      content="Abrace Deus: presentes de fé com compra por PIX e envio para todo o Brasil."
+    />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#inicio" aria-label="Abrace Deus">
+        <span class="brand-mark">AD</span>
+        <span>Abrace Deus</span>
+      </a>
+      <nav aria-label="Navegação principal">
+        <a href="#produtos">Produtos</a>
+        <a href="#checkout">Comprar</a>
+        <a href="#envio">Envio</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="inicio" class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Fé para vestir, presentear e compartilhar</p>
+          <h1>Abrace Deus</h1>
+          <p>
+            Artigos inspirados na fé cristã, preparados com cuidado e enviados
+            para sua casa. Escolha o produto, informe seus dados e finalize por
+            PIX com QR Code único do pedido.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#checkout">Comprar agora</a>
+            <a class="button secondary" href="#produtos">Ver produtos</a>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="Produto Abrace Deus">
+          <div class="halo"></div>
+          <div class="product-mock">
+            <span class="cross">✝</span>
+            <strong>Abrace Deus</strong>
+            <small>kit especial de fé</small>
+          </div>
+        </div>
+      </section>
+
+      <section id="produtos" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Escolha seu abraço</p>
+          <h2>Produtos em destaque</h2>
+        </div>
+        <div class="product-grid" id="productGrid"></div>
+      </section>
+
+      <section id="checkout" class="checkout-section">
+        <div class="checkout-copy">
+          <p class="eyebrow">Pagamento por PIX</p>
+          <h2>Finalize seu pedido</h2>
+          <p>
+            O QR Code é gerado com uma identificação única do pedido. Após o
+            pagamento, seus dados ficam registrados no Supabase para conferência
+            e envio.
+          </p>
+          <ul class="check-list">
+            <li>Chave PIX CPF: <strong>032.945.726-89</strong></li>
+            <li>Cadastro do comprador e endereço de entrega</li>
+            <li>Resumo do pedido antes do pagamento</li>
+          </ul>
+        </div>
+
+        <form class="checkout" id="checkoutForm">
+          <div class="form-row">
+            <label>
+              Produto
+              <select name="productId" id="productSelect" required></select>
+            </label>
+            <label>
+              Quantidade
+              <input name="quantity" type="number" min="1" value="1" required />
+            </label>
+          </div>
+
+          <div class="form-row">
+            <label>
+              Nome completo
+              <input name="name" autocomplete="name" required />
+            </label>
+            <label>
+              E-mail
+              <input name="email" type="email" autocomplete="email" required />
+            </label>
+          </div>
+
+          <div class="form-row">
+            <label>
+              WhatsApp
+              <input name="phone" autocomplete="tel" required />
+            </label>
+            <label>
+              CPF do comprador
+              <input name="buyerCpf" inputmode="numeric" required />
+            </label>
+          </div>
+
+          <label>
+            Endereço
+            <input name="address" autocomplete="street-address" required />
+          </label>
+
+          <div class="form-row three">
+            <label>
+              CEP
+              <input name="zipCode" autocomplete="postal-code" required />
+            </label>
+            <label>
+              Cidade
+              <input name="city" autocomplete="address-level2" required />
+            </label>
+            <label>
+              UF
+              <input name="state" maxlength="2" autocomplete="address-level1" required />
+            </label>
+          </div>
+
+          <label>
+            Observações
+            <textarea name="notes" rows="3" placeholder="Complemento, referência ou mensagem."></textarea>
+          </label>
+
+          <div class="summary" aria-live="polite">
+            <span>Total</span>
+            <strong id="totalAmount">R$ 0,00</strong>
+          </div>
+
+          <button class="button primary submit" type="submit">Gerar PIX e registrar pedido</button>
+          <p class="form-status" id="formStatus" role="status"></p>
+        </form>
+      </section>
+
+      <section class="payment-panel" id="paymentPanel" hidden>
+        <div>
+          <p class="eyebrow">Pedido criado</p>
+          <h2>Pague com PIX</h2>
+          <p>
+            Escaneie o QR Code ou copie o código PIX. Guarde o identificador do
+            pedido para confirmar o pagamento.
+          </p>
+          <dl class="order-meta">
+            <div>
+              <dt>Pedido</dt>
+              <dd id="orderId">-</dd>
+            </div>
+            <div>
+              <dt>Valor</dt>
+              <dd id="paymentAmount">-</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="qr-area">
+          <div id="qrcode"></div>
+          <textarea id="pixCode" readonly rows="5"></textarea>
+          <button class="button secondary" type="button" id="copyPix">Copiar código PIX</button>
+        </div>
+      </section>
+
+      <section id="envio" class="section info-band">
+        <div>
+          <p class="eyebrow">Envio</p>
+          <h2>Dados organizados para separação e entrega</h2>
+        </div>
+        <p>
+          Cada compra salva produto, valor, contato, CPF do comprador, endereço,
+          status inicial e código PIX. No Supabase você pode acompanhar pedidos,
+          pagamentos e preparação de envio.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <span>Abrace Deus</span>
+      <span>Pagamento via PIX</span>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="./config.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
