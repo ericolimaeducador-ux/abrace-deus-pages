@@ -11,25 +11,25 @@
   const config = Object.assign({}, fallbackConfig, window.ABRACE_CONFIG || {});
   const products = [
     {
-      id: "kit-abrace-deus",
-      name: "Kit Abrace Deus",
-      description: "Kit especial para presentear com uma mensagem de fé e cuidado.",
+      id: "abraco-essencial",
+      name: "Abraço Essencial",
+      description: "Kit surpresa de fé e acolhimento para lembrar que Deus continua perto.",
       price: 6990,
-      icon: "✝"
-    },
-    {
-      id: "camiseta-abrace-deus",
-      name: "Camiseta Abrace Deus",
-      description: "Camiseta temática com estampa discreta e acabamento confortável.",
-      price: 8990,
       icon: "AD"
     },
     {
-      id: "presente-devocional",
-      name: "Presente Devocional",
-      description: "Uma opção de lembrança cristã para datas especiais.",
+      id: "abraco-luto",
+      name: "Abraço para Luto",
+      description: "Um gesto de cuidado para quem está atravessando saudade e dor.",
+      price: 8990,
+      icon: "✝"
+    },
+    {
+      id: "doe-um-abraco",
+      name: "Doe um Abraço",
+      description: "Doe um kit para pessoas indicadas por instituições parceiras.",
       price: 4990,
-      icon: "☼"
+      icon: "♡"
     }
   ];
 

@@ -1,25 +1,68 @@
+create extension if not exists pgcrypto;
+
 create table if not exists public.orders (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
   order_id text not null unique,
+  order_number text,
   product_id text not null,
   product_name text not null,
-  quantity integer not null check (quantity > 0),
+  quantity integer not null default 1 check (quantity > 0),
   total_cents integer not null check (total_cents > 0),
+  total_amount numeric(10, 2),
   buyer_name text not null,
   buyer_email text not null,
   buyer_phone text not null,
   buyer_cpf text not null,
+  buyer_cpf_cnpj text,
+  recipient_name text,
+  recipient_phone text,
+  recipient_email text,
   shipping_address text not null,
   shipping_zip_code text not null,
   shipping_city text not null,
   shipping_state text not null,
+  recipient_zipcode text,
+  recipient_address text,
+  recipient_number text,
+  recipient_complement text,
+  recipient_district text,
+  recipient_city text,
+  recipient_state text,
+  reason text,
+  personal_message text,
+  is_anonymous boolean not null default false,
+  wants_delivery_confirmation boolean not null default false,
+  payment_method text not null default 'pix',
+  payment_status text not null default 'pending',
+  order_status text not null default 'created',
+  shipping_status text not null default 'aguardando_separacao',
+  disclaimer_accepted boolean not null default false,
   notes text,
   pix_key text not null,
-  pix_payload text not null,
-  payment_status text not null default 'aguardando_pagamento',
-  shipping_status text not null default 'aguardando_separacao'
+  pix_payload text not null
 );
+
+alter table public.orders add column if not exists order_number text;
+alter table public.orders add column if not exists total_amount numeric(10, 2);
+alter table public.orders add column if not exists buyer_cpf_cnpj text;
+alter table public.orders add column if not exists recipient_name text;
+alter table public.orders add column if not exists recipient_phone text;
+alter table public.orders add column if not exists recipient_email text;
+alter table public.orders add column if not exists recipient_zipcode text;
+alter table public.orders add column if not exists recipient_address text;
+alter table public.orders add column if not exists recipient_number text;
+alter table public.orders add column if not exists recipient_complement text;
+alter table public.orders add column if not exists recipient_district text;
+alter table public.orders add column if not exists recipient_city text;
+alter table public.orders add column if not exists recipient_state text;
+alter table public.orders add column if not exists reason text;
+alter table public.orders add column if not exists personal_message text;
+alter table public.orders add column if not exists is_anonymous boolean not null default false;
+alter table public.orders add column if not exists wants_delivery_confirmation boolean not null default false;
+alter table public.orders add column if not exists payment_method text not null default 'pix';
+alter table public.orders add column if not exists order_status text not null default 'created';
+alter table public.orders add column if not exists disclaimer_accepted boolean not null default false;
 
 alter table public.orders enable row level security;
 
@@ -39,3 +82,133 @@ using (true);
 
 create index if not exists orders_created_at_idx on public.orders (created_at desc);
 create index if not exists orders_payment_status_idx on public.orders (payment_status);
+create index if not exists orders_order_status_idx on public.orders (order_status);
+
+create table if not exists public.donations (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  donor_name text not null,
+  donor_email text not null,
+  donor_phone text,
+  quantity integer not null default 1 check (quantity > 0),
+  amount numeric(10, 2),
+  is_anonymous boolean not null default false,
+  wants_impact_report boolean not null default false,
+  message text,
+  payment_status text not null default 'pending',
+  donation_status text not null default 'pending'
+);
+
+alter table public.donations enable row level security;
+
+drop policy if exists "donations_insert_public" on public.donations;
+create policy "donations_insert_public"
+on public.donations
+for insert
+to anon
+with check (true);
+
+drop policy if exists "donations_select_authenticated" on public.donations;
+create policy "donations_select_authenticated"
+on public.donations
+for select
+to authenticated
+using (true);
+
+create table if not exists public.impact_metrics (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  kits_sold integer not null default 0,
+  kits_donated integer not null default 0,
+  institutions_count integer not null default 0,
+  cities_reached integer not null default 0,
+  people_reached integer not null default 0
+);
+
+alter table public.impact_metrics enable row level security;
+
+drop policy if exists "impact_metrics_select_public" on public.impact_metrics;
+create policy "impact_metrics_select_public"
+on public.impact_metrics
+for select
+to anon, authenticated
+using (true);
+
+create table if not exists public.partner_institutions (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  institution_name text not null,
+  cnpj text,
+  responsible_name text not null,
+  responsible_role text,
+  phone text not null,
+  email text not null,
+  city text,
+  state text,
+  institution_type text,
+  people_served_per_month integer,
+  beneficiary_indication_process text,
+  notes text,
+  status text not null default 'pending',
+  terms_accepted boolean not null default false
+);
+
+alter table public.partner_institutions enable row level security;
+
+drop policy if exists "partner_institutions_insert_public" on public.partner_institutions;
+create policy "partner_institutions_insert_public"
+on public.partner_institutions
+for insert
+to anon
+with check (true);
+
+drop policy if exists "partner_institutions_select_authenticated" on public.partner_institutions;
+create policy "partner_institutions_select_authenticated"
+on public.partner_institutions
+for select
+to authenticated
+using (true);
+
+create table if not exists public.products (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  name text not null,
+  slug text not null unique,
+  category text,
+  short_description text,
+  long_description text,
+  price numeric(10, 2) not null,
+  image_url text,
+  is_active boolean not null default true,
+  is_donation boolean not null default false,
+  includes text[],
+  cta_text text
+);
+
+alter table public.products enable row level security;
+
+drop policy if exists "products_select_public" on public.products;
+create policy "products_select_public"
+on public.products
+for select
+to anon, authenticated
+using (is_active = true);
+
+create table if not exists public.testimonials (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  name text not null,
+  location text,
+  experience_type text,
+  content text not null,
+  is_active boolean not null default true
+);
+
+alter table public.testimonials enable row level security;
+
+drop policy if exists "testimonials_select_public" on public.testimonials;
+create policy "testimonials_select_public"
+on public.testimonials
+for select
+to anon, authenticated
+using (is_active = true);
