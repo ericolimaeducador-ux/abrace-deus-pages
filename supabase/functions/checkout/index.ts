@@ -163,7 +163,24 @@ function shippingForState(state: string) {
   return rates[String(state || "").toUpperCase()] || 4990;
 }
 
-function normalizeOrder(input: Record<string, unknown>): NormalizedOrder {
+async function shippingForStateFromDatabase(state: string) {
+  const fallback = shippingForState(state);
+
+  const { data, error } = await supabase
+    .from("shipping_rates")
+    .select("price_cents")
+    .eq("state", state)
+    .eq("is_active", true)
+    .maybeSingle();
+
+  if (error || !data || typeof data.price_cents !== "number") {
+    return fallback;
+  }
+
+  return data.price_cents;
+}
+
+async function normalizeOrder(input: Record<string, unknown>): Promise<NormalizedOrder> {
   const product = products.find((item) => item.id === input.product_id);
   if (!product) throw new Error("Produto inválido.");
 
@@ -174,7 +191,7 @@ function normalizeOrder(input: Record<string, unknown>): NormalizedOrder {
   const zipCode = requireZipCode(input.shipping_zip_code || input.recipient_zipcode);
   const state = requireState(input.shipping_state || input.recipient_state);
   const subtotalCents = product.price * quantity;
-  const shippingCents = shippingForState(state);
+  const shippingCents = await shippingForStateFromDatabase(state);
   const totalCents = subtotalCents + shippingCents;
   const orderId = makeOrderId();
 
@@ -412,7 +429,7 @@ async function createOrder(payload: Record<string, unknown>) {
     : null;
   if (!orderInput) throw new Error("Pedido inválido.");
 
-  const order = normalizeOrder(orderInput);
+  const order = await normalizeOrder(orderInput);
   const preference = await createPreference(order);
 
   const { error } = await supabase.from("orders").insert({

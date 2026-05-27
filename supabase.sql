@@ -124,6 +124,61 @@ using (true);
 create index if not exists payment_events_order_id_idx on public.payment_events (order_id);
 create index if not exists payment_events_provider_payment_id_idx on public.payment_events (provider_payment_id);
 
+create table if not exists public.shipping_rates (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  state text not null unique check (state ~ '^[A-Z]{2}$'),
+  price_cents integer not null check (price_cents >= 0),
+  delivery_days_min integer not null default 3 check (delivery_days_min > 0),
+  delivery_days_max integer not null default 10 check (delivery_days_max >= delivery_days_min),
+  is_active boolean not null default true
+);
+
+alter table public.shipping_rates enable row level security;
+
+drop policy if exists "shipping_rates_select_public" on public.shipping_rates;
+create policy "shipping_rates_select_public"
+on public.shipping_rates
+for select
+to anon, authenticated
+using (is_active = true);
+
+insert into public.shipping_rates (state, price_cents, delivery_days_min, delivery_days_max)
+values
+  ('SP', 1890, 2, 5),
+  ('RJ', 2490, 3, 7),
+  ('MG', 2490, 3, 7),
+  ('ES', 2690, 4, 8),
+  ('PR', 2690, 4, 8),
+  ('SC', 2990, 5, 9),
+  ('RS', 3290, 5, 10),
+  ('DF', 3290, 5, 10),
+  ('GO', 3490, 5, 10),
+  ('MS', 3490, 5, 10),
+  ('MT', 3990, 6, 12),
+  ('BA', 3990, 6, 12),
+  ('SE', 4290, 6, 12),
+  ('AL', 4290, 6, 12),
+  ('PE', 4490, 6, 12),
+  ('PB', 4490, 6, 12),
+  ('RN', 4690, 7, 13),
+  ('CE', 4690, 7, 13),
+  ('PI', 4990, 7, 14),
+  ('MA', 4990, 7, 14),
+  ('TO', 4990, 7, 14),
+  ('PA', 5490, 8, 16),
+  ('AP', 5990, 9, 18),
+  ('AM', 5990, 9, 18),
+  ('RR', 6490, 10, 20),
+  ('RO', 6490, 10, 20),
+  ('AC', 6990, 10, 20)
+on conflict (state) do update
+set
+  price_cents = excluded.price_cents,
+  delivery_days_min = excluded.delivery_days_min,
+  delivery_days_max = excluded.delivery_days_max,
+  is_active = true;
+
 create table if not exists public.donations (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
