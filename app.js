@@ -2,9 +2,6 @@
   const fallbackConfig = {
     supabaseUrl: "",
     supabaseAnonKey: "",
-    pixKey: "03294572689",
-    merchantName: "ABRACE DEUS",
-    merchantCity: "SAO PAULO",
     currency: "BRL"
   };
 
@@ -114,11 +111,8 @@
   const totalAmount = $("#totalAmount");
   const statusEl = $("#formStatus");
   const paymentPanel = $("#paymentPanel");
-  const qrcodeEl = $("#qrcode");
-  const pixCodeEl = $("#pixCode");
   const orderIdEl = $("#orderId");
   const paymentAmountEl = $("#paymentAmount");
-  const copyPix = $("#copyPix");
   const donationOptions = $("#donationOptions");
   const shippingAmountEl = $("#shippingAmount");
   const calculateShippingButton = $("#calculateShipping");
@@ -140,44 +134,6 @@
 
   function onlyDigits(value) {
     return String(value || "").replace(/\D/g, "");
-  }
-
-  function emv(id, value) {
-    const stringValue = String(value || "");
-    return `${id}${String(stringValue.length).padStart(2, "0")}${stringValue}`;
-  }
-
-  function crc16(payload) {
-    let crc = 0xffff;
-    for (let i = 0; i < payload.length; i += 1) {
-      crc ^= payload.charCodeAt(i) << 8;
-      for (let bit = 0; bit < 8; bit += 1) {
-        crc = crc & 0x8000 ? (crc << 1) ^ 0x1021 : crc << 1;
-        crc &= 0xffff;
-      }
-    }
-    return crc.toString(16).toUpperCase().padStart(4, "0");
-  }
-
-  function makePixPayload({ amount, txid }) {
-    const merchantAccount = emv("00", "br.gov.bcb.pix") + emv("01", onlyDigits(config.pixKey));
-    const payloadWithoutCrc = [
-      emv("00", "01"),
-      emv("26", merchantAccount),
-      emv("52", "0000"),
-      emv("53", "986"),
-      emv("54", amount.toFixed(2)),
-      emv("58", "BR"),
-      emv("59", String(config.merchantName).normalize("NFD").replace(/[\u0300-\u036f]/g, "").slice(0, 25)),
-      emv("60", String(config.merchantCity).normalize("NFD").replace(/[\u0300-\u036f]/g, "").slice(0, 15)),
-      emv("62", emv("05", txid.slice(0, 25)))
-    ].join("");
-    const crcPayload = `${payloadWithoutCrc}6304`;
-    return `${crcPayload}${crc16(crcPayload)}`;
-  }
-
-  function makeOrderId() {
-    return `ABD-${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
   }
 
   function selectedProduct() {
@@ -360,8 +316,6 @@
       personal_message: String(formData.get("notes") || "").trim(),
       signature: String(formData.get("signature") || "").trim(),
       notes: String(formData.get("notes") || "").trim(),
-      pix_key: onlyDigits(config.pixKey),
-      pix_payload: "",
       payment_method: "mercado_pago",
       payment_status: "pending",
       order_status: "created",
@@ -593,13 +547,4 @@
   institutionForm.addEventListener("submit", handleInstitution);
   calculateShippingButton.addEventListener("click", fillAddressFromZip);
 
-  if (copyPix && pixCodeEl) {
-    copyPix.addEventListener("click", async () => {
-      await navigator.clipboard.writeText(pixCodeEl.value);
-      copyPix.textContent = "Código copiado";
-      setTimeout(() => {
-        copyPix.textContent = "Copiar código PIX";
-      }, 1800);
-    });
-  }
 })();

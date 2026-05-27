@@ -56,6 +56,8 @@ alter table public.orders add column if not exists mercado_pago_preference_id te
 alter table public.orders add column if not exists mercado_pago_status text;
 alter table public.orders add column if not exists mercado_pago_status_detail text;
 alter table public.orders add column if not exists message_signature text;
+alter table public.orders alter column pix_key drop not null;
+alter table public.orders alter column pix_payload drop not null;
 
 do $$
 begin

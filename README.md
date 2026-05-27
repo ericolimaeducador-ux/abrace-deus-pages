@@ -1,6 +1,6 @@
 # Abrace Deus - GitHub Pages
 
-Site estático para vitrine, campanha, cadastro de instituições, doações e checkout com PIX.
+Site estático para vitrine, campanha, cadastro de instituições, doações e checkout com Mercado Pago.
 Os dados são salvos no Supabase quando `config.js` estiver configurado.
 
 ## Configuração
@@ -9,18 +9,14 @@ Os dados são salvos no Supabase quando `config.js` estiver configurado.
 2. Rode o conteúdo de `supabase.sql` no SQL Editor.
 3. Copie `config.example.js` para `config.js`.
 4. Preencha `supabaseUrl` e `supabaseAnonKey` com os dados públicos do projeto.
-5. Confirme os dados PIX:
-   - `pixKey`: CPF `03294572689`
-   - `merchantName`: nome do recebedor exibido no app do banco
-   - `merchantCity`: cidade do recebedor
-
-O QR Code PIX usa um `txid` único gerado para cada pedido.
+5. Configure a `mercadoPagoPublicKey` pública no `config.js`.
+6. Configure `MERCADO_PAGO_ACCESS_TOKEN` e `MERCADO_PAGO_WEBHOOK_SECRET` nos Supabase Secrets.
 
 ## Tabelas Supabase
 
 O arquivo `supabase.sql` cria as tabelas:
 
-- `orders`: pedidos e dados do PIX.
+- `orders`: pedidos e dados de pagamento.
 - `donations`: doações de kits.
 - `partner_institutions`: cadastros de instituições parceiras.
 - `impact_metrics`: métricas públicas da campanha.

@@ -36,7 +36,7 @@ create table if not exists public.orders (
   message_signature text,
   is_anonymous boolean not null default false,
   wants_delivery_confirmation boolean not null default false,
-  payment_method text not null default 'pix',
+  payment_method text not null default 'mercado_pago',
   payment_status text not null default 'pending',
   mercado_pago_payment_id text,
   mercado_pago_preference_id text,
@@ -46,8 +46,8 @@ create table if not exists public.orders (
   shipping_status text not null default 'aguardando_separacao',
   disclaimer_accepted boolean not null default false,
   notes text,
-  pix_key text not null,
-  pix_payload text not null
+  pix_key text,
+  pix_payload text
 );
 
 alter table public.orders add column if not exists order_number text;
@@ -70,13 +70,15 @@ alter table public.orders add column if not exists personal_message text;
 alter table public.orders add column if not exists message_signature text;
 alter table public.orders add column if not exists is_anonymous boolean not null default false;
 alter table public.orders add column if not exists wants_delivery_confirmation boolean not null default false;
-alter table public.orders add column if not exists payment_method text not null default 'pix';
+alter table public.orders add column if not exists payment_method text not null default 'mercado_pago';
 alter table public.orders add column if not exists mercado_pago_payment_id text;
 alter table public.orders add column if not exists mercado_pago_preference_id text;
 alter table public.orders add column if not exists mercado_pago_status text;
 alter table public.orders add column if not exists mercado_pago_status_detail text;
 alter table public.orders add column if not exists order_status text not null default 'created';
 alter table public.orders add column if not exists disclaimer_accepted boolean not null default false;
+alter table public.orders alter column pix_key drop not null;
+alter table public.orders alter column pix_payload drop not null;
 
 alter table public.orders enable row level security;
 
