@@ -256,6 +256,15 @@ function orderStatusFromPaymentStatus(status: string) {
   return "payment_pending";
 }
 
+function payloadFromFormEncoded(rawBody: string) {
+  const params = new URLSearchParams(rawBody);
+  const payload: Record<string, unknown> = {};
+  for (const [key, value] of params.entries()) {
+    payload[key] = value;
+  }
+  return payload;
+}
+
 async function updateOrderFromPayment(paymentResult: Record<string, unknown>, eventType: string) {
   const orderId = String(paymentResult.external_reference || "");
   if (!orderId) throw new Error("Pagamento sem external_reference.");
@@ -515,13 +524,22 @@ Deno.serve(async (request) => {
 
   try {
     const url = new URL(request.url);
-    const isWebhook = url.pathname.endsWith("/webhook");
+    const isWebhook =
+      url.pathname.endsWith("/webhook") ||
+      url.searchParams.has("topic") ||
+      url.searchParams.has("type") ||
+      url.searchParams.has("id") ||
+      url.searchParams.has("data.id");
     let payload: Record<string, unknown> = {};
 
     if (request.method !== "GET") {
       const rawBody = await request.text();
       if (rawBody.trim()) {
-        payload = JSON.parse(rawBody);
+        try {
+          payload = JSON.parse(rawBody);
+        } catch (_error) {
+          payload = payloadFromFormEncoded(rawBody);
+        }
       }
     }
 
