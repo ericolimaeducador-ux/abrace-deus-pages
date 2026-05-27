@@ -265,6 +265,64 @@ function payloadFromFormEncoded(rawBody: string) {
   return payload;
 }
 
+function parseMercadoPagoSignature(signatureHeader: string) {
+  const parts = signatureHeader.split(",");
+  const values: Record<string, string> = {};
+
+  for (const part of parts) {
+    const [key, value] = part.split("=", 2);
+    if (key && value) values[key.trim()] = value.trim();
+  }
+
+  return {
+    timestamp: values.ts || "",
+    signature: values.v1 || ""
+  };
+}
+
+function bytesToHex(buffer: ArrayBuffer) {
+  return Array.from(new Uint8Array(buffer))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+function timingSafeEqual(a: string, b: string) {
+  if (a.length !== b.length) return false;
+
+  let result = 0;
+  for (let index = 0; index < a.length; index += 1) {
+    result |= a.charCodeAt(index) ^ b.charCodeAt(index);
+  }
+
+  return result === 0;
+}
+
+async function verifyMercadoPagoSignature(request: Request, url: URL) {
+  if (!mercadoPagoWebhookSecret) return true;
+
+  const xSignature = request.headers.get("x-signature") || "";
+  const xRequestId = request.headers.get("x-request-id") || "";
+
+  if (!xSignature || !xRequestId) return false;
+
+  const { timestamp, signature } = parseMercadoPagoSignature(xSignature);
+  const dataId = url.searchParams.get("data.id") || url.searchParams.get("id") || "";
+
+  if (!timestamp || !signature || !dataId) return false;
+
+  const manifest = `id:${dataId};request-id:${xRequestId};ts:${timestamp};`;
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(mercadoPagoWebhookSecret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const expectedSignature = bytesToHex(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(manifest)));
+
+  return timingSafeEqual(expectedSignature, signature);
+}
+
 async function updateOrderFromPayment(paymentResult: Record<string, unknown>, eventType: string) {
   const orderId = String(paymentResult.external_reference || "");
   if (!orderId) throw new Error("Pagamento sem external_reference.");
@@ -476,8 +534,13 @@ async function handleWebhook(request: Request, payload: Record<string, unknown>)
 
   const url = new URL(request.url);
   if (mercadoPagoWebhookSecret) {
+    const hasMercadoPagoSignature = request.headers.has("x-signature") || request.headers.has("x-request-id");
     const requestSecret = request.headers.get("x-webhook-secret") || url.searchParams.get("secret") || "";
-    if (requestSecret !== mercadoPagoWebhookSecret) {
+    const isAuthorized = hasMercadoPagoSignature
+      ? await verifyMercadoPagoSignature(request, url)
+      : requestSecret === mercadoPagoWebhookSecret;
+
+    if (!isAuthorized) {
       return json({ error: "Webhook não autorizado." }, 401);
     }
   }
