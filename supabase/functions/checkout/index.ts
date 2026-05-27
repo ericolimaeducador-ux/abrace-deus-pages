@@ -297,7 +297,7 @@ function timingSafeEqual(a: string, b: string) {
   return result === 0;
 }
 
-async function verifyMercadoPagoSignature(request: Request, url: URL) {
+async function verifyMercadoPagoSignature(request: Request, dataId: string) {
   if (!mercadoPagoWebhookSecret) return true;
 
   const xSignature = request.headers.get("x-signature") || "";
@@ -306,7 +306,6 @@ async function verifyMercadoPagoSignature(request: Request, url: URL) {
   if (!xSignature || !xRequestId) return false;
 
   const { timestamp, signature } = parseMercadoPagoSignature(xSignature);
-  const dataId = url.searchParams.get("data.id") || url.searchParams.get("id") || "";
 
   if (!timestamp || !signature || !dataId) return false;
 
@@ -533,18 +532,6 @@ async function handleWebhook(request: Request, payload: Record<string, unknown>)
   }
 
   const url = new URL(request.url);
-  if (mercadoPagoWebhookSecret) {
-    const hasMercadoPagoSignature = request.headers.has("x-signature") || request.headers.has("x-request-id");
-    const requestSecret = request.headers.get("x-webhook-secret") || url.searchParams.get("secret") || "";
-    const isAuthorized = hasMercadoPagoSignature
-      ? await verifyMercadoPagoSignature(request, url)
-      : requestSecret === mercadoPagoWebhookSecret;
-
-    if (!isAuthorized) {
-      return json({ error: "Webhook não autorizado." }, 401);
-    }
-  }
-
   const type = String(
     payload.type ||
     payload.topic ||
@@ -565,6 +552,18 @@ async function handleWebhook(request: Request, payload: Record<string, unknown>)
 
   if (!paymentId) {
     return json({ received: true, ignored: "missing_payment_id" });
+  }
+
+  if (mercadoPagoWebhookSecret) {
+    const hasMercadoPagoSignature = request.headers.has("x-signature") || request.headers.has("x-request-id");
+    const requestSecret = request.headers.get("x-webhook-secret") || url.searchParams.get("secret") || "";
+    const isAuthorized = hasMercadoPagoSignature
+      ? await verifyMercadoPagoSignature(request, paymentId)
+      : requestSecret === mercadoPagoWebhookSecret;
+
+    if (!isAuthorized) {
+      return json({ error: "Webhook não autorizado." }, 401);
+    }
   }
 
   if (type && !["payment", "payment.updated", "payment.created"].includes(type)) {
