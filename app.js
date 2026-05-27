@@ -120,8 +120,19 @@
   const paymentAmountEl = $("#paymentAmount");
   const copyPix = $("#copyPix");
   const donationOptions = $("#donationOptions");
+  const shippingAmountEl = $("#shippingAmount");
+  const calculateShippingButton = $("#calculateShipping");
+  const paymentStatusEl = $("#paymentStatus");
+  const zipCodeEl = $("#zipCode");
+  const addressEl = $("#address");
+  const districtEl = $("#district");
+  const cityEl = $("#city");
+  const stateEl = $("#state");
 
   let donationQuantity = 1;
+  let shippingCents = 0;
+  let checkoutSession = null;
+  let paymentBrickController = null;
 
   function centsToMoney(cents) {
     return formatter.format(cents / 100);
@@ -179,11 +190,78 @@
   }
 
   function getTotalCents() {
-    return selectedProduct().price * getQuantity();
+    return selectedProduct().price * getQuantity() + shippingCents;
   }
 
   function updateTotal() {
     totalAmount.textContent = centsToMoney(getTotalCents());
+    if (shippingAmountEl) {
+      shippingAmountEl.textContent = shippingCents > 0 ? centsToMoney(shippingCents) : "Informe o CEP";
+    }
+  }
+
+  function shippingForState(state) {
+    const normalizedState = String(state || "").trim().toUpperCase();
+    const rates = {
+      SP: 1890,
+      RJ: 2490,
+      MG: 2490,
+      ES: 2690,
+      PR: 2690,
+      SC: 2990,
+      RS: 3290,
+      DF: 3290,
+      GO: 3490,
+      MS: 3490,
+      MT: 3990,
+      BA: 3990,
+      SE: 4290,
+      AL: 4290,
+      PE: 4490,
+      PB: 4490,
+      RN: 4690,
+      CE: 4690,
+      PI: 4990,
+      MA: 4990,
+      TO: 4990,
+      PA: 5490,
+      AP: 5990,
+      AM: 5990,
+      RR: 6490,
+      RO: 6490,
+      AC: 6990
+    };
+    return rates[normalizedState] || 4990;
+  }
+
+  async function fillAddressFromZip() {
+    const zipCode = onlyDigits(zipCodeEl && zipCodeEl.value);
+    if (zipCode.length !== 8) {
+      statusEl.textContent = "Informe um CEP com 8 números para calcular o frete.";
+      return false;
+    }
+
+    statusEl.textContent = "Calculando frete...";
+
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${zipCode}/json/`);
+      const data = await response.json();
+      if (data.erro) throw new Error("CEP não encontrado.");
+
+      addressEl.value = addressEl.value || data.logradouro || "";
+      districtEl.value = districtEl.value || data.bairro || "";
+      cityEl.value = data.localidade || cityEl.value;
+      stateEl.value = String(data.uf || stateEl.value).toUpperCase();
+      shippingCents = shippingForState(stateEl.value);
+      statusEl.textContent = "Frete calculado. Confira os dados de entrega.";
+      updateTotal();
+      return true;
+    } catch (error) {
+      shippingCents = 0;
+      updateTotal();
+      statusEl.textContent = `Não foi possível calcular o frete: ${error.message}`;
+      return false;
+    }
   }
 
   function renderProducts() {
@@ -237,10 +315,11 @@
     `).join("");
   }
 
-  function orderFromForm(formData, orderId, pixPayload) {
+  function checkoutPayloadFromForm(formData) {
     const product = selectedProduct();
     const quantity = getQuantity();
-    const totalCents = product.price * quantity;
+    const subtotalCents = product.price * quantity;
+    const totalCents = subtotalCents + shippingCents;
     const totalAmountValue = totalCents / 100;
     const buyerCpf = onlyDigits(formData.get("buyerCpf"));
     const recipientName = String(formData.get("recipientName")).trim();
@@ -250,20 +329,26 @@
     const zipCode = onlyDigits(formData.get("zipCode"));
 
     return {
-      order_id: orderId,
-      order_number: orderId,
-      product_id: product.id,
-      product_name: product.name,
+      product,
       quantity,
+      subtotal_cents: subtotalCents,
+      shipping_cents: shippingCents,
       total_cents: totalCents,
       total_amount: totalAmountValue,
+      product_id: product.id,
+      product_name: product.name,
       buyer_name: String(formData.get("name")).trim(),
       buyer_email: String(formData.get("email")).trim(),
       buyer_phone: String(formData.get("phone")).trim(),
       buyer_cpf: buyerCpf,
       buyer_cpf_cnpj: buyerCpf,
       recipient_name: recipientName,
+      recipient_phone: String(formData.get("recipientPhone") || "").trim(),
       shipping_address: address,
+      recipient_address: address,
+      recipient_number: String(formData.get("number")).trim(),
+      recipient_complement: String(formData.get("complement") || "").trim(),
+      recipient_district: String(formData.get("district")).trim(),
       shipping_zip_code: zipCode,
       shipping_city: city,
       shipping_state: state,
@@ -273,10 +358,11 @@
       recipient_state: state,
       reason: String(formData.get("reason") || "").trim(),
       personal_message: String(formData.get("notes") || "").trim(),
+      signature: String(formData.get("signature") || "").trim(),
       notes: String(formData.get("notes") || "").trim(),
       pix_key: onlyDigits(config.pixKey),
-      pix_payload: pixPayload,
-      payment_method: "pix",
+      pix_payload: "",
+      payment_method: "mercado_pago",
       payment_status: "pending",
       order_status: "created",
       shipping_status: "aguardando_separacao",
@@ -297,45 +383,133 @@
     return { localOnly: false };
   }
 
-  function showPayment(order) {
-    paymentPanel.hidden = false;
-    orderIdEl.textContent = order.order_id;
-    paymentAmountEl.textContent = centsToMoney(order.total_cents);
-    pixCodeEl.value = order.pix_payload;
-    qrcodeEl.innerHTML = "";
-
-    if (window.QRCode) {
-      new window.QRCode(qrcodeEl, {
-        text: order.pix_payload,
-        width: 256,
-        height: 256,
-        correctLevel: window.QRCode.CorrectLevel.M
-      });
-    } else {
-      qrcodeEl.textContent = "Biblioteca de QR Code indisponível. Use o código PIX copia e cola.";
+  async function createCheckoutSession(order) {
+    if (!config.checkoutFunctionUrl) {
+      throw new Error("Configure checkoutFunctionUrl no config.js.");
     }
+
+    const response = await fetch(config.checkoutFunctionUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: config.supabaseAnonKey || "",
+        Authorization: `Bearer ${config.supabaseAnonKey || ""}`
+      },
+      body: JSON.stringify({
+        action: "create_order",
+        order
+      })
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || "Falha ao criar pedido.");
+    return data;
+  }
+
+  async function submitMercadoPagoPayment(formData) {
+    const response = await fetch(config.checkoutFunctionUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: config.supabaseAnonKey || "",
+        Authorization: `Bearer ${config.supabaseAnonKey || ""}`
+      },
+      body: JSON.stringify({
+        action: "process_payment",
+        orderId: checkoutSession.orderId,
+        payment: formData
+      })
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || "Falha ao processar pagamento.");
+    return data;
+  }
+
+  async function renderPaymentBrick(session) {
+    if (!window.MercadoPago || !config.mercadoPagoPublicKey) {
+      paymentStatusEl.textContent = "Configure mercadoPagoPublicKey no config.js para habilitar PIX e cartão.";
+      return;
+    }
+
+    if (paymentBrickController) {
+      paymentBrickController.unmount();
+      paymentBrickController = null;
+    }
+
+    const mp = new window.MercadoPago(config.mercadoPagoPublicKey, { locale: "pt-BR" });
+    const bricksBuilder = mp.bricks();
+    paymentBrickController = await bricksBuilder.create("payment", "paymentBrick_container", {
+      initialization: {
+        amount: session.totalAmount,
+        preferenceId: session.preferenceId || undefined
+      },
+      customization: {
+        paymentMethods: {
+          creditCard: "all",
+          debitCard: "all",
+          bankTransfer: "all",
+          mercadoPago: session.preferenceId ? ["wallet_purchase"] : [],
+          prepaidCard: "all"
+        }
+      },
+      callbacks: {
+        onReady: () => {
+          paymentStatusEl.textContent = "";
+        },
+        onSubmit: ({ formData }) => new Promise((resolve, reject) => {
+          paymentStatusEl.textContent = "Processando pagamento...";
+          submitMercadoPagoPayment(formData)
+            .then((result) => {
+              paymentStatusEl.textContent = result.message || "Pagamento enviado. Acompanhe o status pelo Mercado Pago.";
+              resolve();
+            })
+            .catch((error) => {
+              paymentStatusEl.textContent = error.message;
+              reject(error);
+            });
+        }),
+        onError: (error) => {
+          paymentStatusEl.textContent = "Não foi possível carregar o checkout do Mercado Pago. Verifique se a Public Key e o Access Token são do mesmo ambiente.";
+          console.error(error);
+        }
+      }
+    });
+  }
+
+  async function showPayment(session) {
+    paymentPanel.hidden = false;
+    orderIdEl.textContent = session.orderId;
+    paymentAmountEl.textContent = centsToMoney(Math.round(session.totalAmount * 100));
+    await renderPaymentBrick(session);
 
     paymentPanel.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   async function handleCheckout(event) {
     event.preventDefault();
-    statusEl.textContent = "Registrando pedido...";
+    statusEl.textContent = "";
+
+    if (!checkoutForm.checkValidity()) {
+      checkoutForm.reportValidity();
+      return;
+    }
+
+    if (shippingCents <= 0) {
+      const calculated = await fillAddressFromZip();
+      if (!calculated) return;
+    }
 
     const formData = new FormData(checkoutForm);
-    const orderId = makeOrderId();
-    const pixPayload = makePixPayload({ amount: getTotalCents() / 100, txid: orderId });
-    const order = orderFromForm(formData, orderId, pixPayload);
+    const order = checkoutPayloadFromForm(formData);
+    statusEl.textContent = "Criando pedido...";
 
     try {
-      const result = await insertOrStore("orders", order, "abrace_orders");
-      statusEl.textContent = result.localOnly
-        ? "Pedido gerado localmente. Preencha config.js com Supabase para salvar na nuvem."
-        : "Pedido registrado no Supabase. Use o PIX abaixo para concluir.";
-      showPayment(order);
+      checkoutSession = await createCheckoutSession(order);
+      statusEl.textContent = "Pedido criado. Escolha o pagamento abaixo.";
+      await showPayment(checkoutSession);
     } catch (error) {
-      statusEl.textContent = `Não foi possível salvar no Supabase: ${error.message}`;
-      showPayment(order);
+      statusEl.textContent = `Não foi possível iniciar o checkout: ${error.message}`;
     }
   }
 
@@ -408,16 +582,24 @@
     renderStaticData();
   });
 
-  checkoutForm.addEventListener("input", updateTotal);
+  checkoutForm.addEventListener("input", (event) => {
+    if (["zipCode", "state"].includes(event.target.name)) {
+      shippingCents = 0;
+    }
+    updateTotal();
+  });
   checkoutForm.addEventListener("submit", handleCheckout);
   donationForm.addEventListener("submit", handleDonation);
   institutionForm.addEventListener("submit", handleInstitution);
+  calculateShippingButton.addEventListener("click", fillAddressFromZip);
 
-  copyPix.addEventListener("click", async () => {
-    await navigator.clipboard.writeText(pixCodeEl.value);
-    copyPix.textContent = "Código copiado";
-    setTimeout(() => {
-      copyPix.textContent = "Copiar código PIX";
-    }, 1800);
-  });
+  if (copyPix && pixCodeEl) {
+    copyPix.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(pixCodeEl.value);
+      copyPix.textContent = "Código copiado";
+      setTimeout(() => {
+        copyPix.textContent = "Copiar código PIX";
+      }, 1800);
+    });
+  }
 })();

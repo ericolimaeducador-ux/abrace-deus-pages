@@ -220,22 +220,27 @@
         <div class="faq-list" id="faqList"></div>
       </section>
 
-      <section id="checkout" class="section checkout-section">
+      <section id="checkout" class="section checkout-section commerce-checkout">
         <div class="checkout-copy">
-          <p class="eyebrow">Pagamento por PIX</p>
-          <h2>Finalize seu pedido</h2>
+          <p class="eyebrow">Checkout seguro</p>
+          <h2>Finalize sua compra</h2>
           <p>
-            O QR Code é gerado com uma identificação única do pedido. Após o pagamento, seus dados
-            ficam registrados no Supabase para conferência e envio.
+            Compra estruturada com dados do cliente, entrega, frete e pagamento via Mercado Pago.
+            O pedido fica registrado no Supabase para separação, conferência e envio.
           </p>
           <ul class="check-list">
-            <li>Chave PIX CPF: <strong>032.945.726-89</strong></li>
-            <li>Cadastro do comprador e endereço de entrega</li>
-            <li>Resumo do pedido antes do pagamento</li>
+            <li>PIX e cartão de crédito no checkout oficial</li>
+            <li>Cálculo de frete antes do pagamento</li>
+            <li>Endereço completo de entrega no pedido</li>
           </ul>
         </div>
 
-        <form class="checkout panel" id="checkoutForm">
+        <form class="checkout panel" id="checkoutForm" novalidate>
+          <div class="checkout-steps" aria-label="Etapas do checkout">
+            <span class="active">1. Produto</span>
+            <span>2. Entrega</span>
+            <span>3. Pagamento</span>
+          </div>
           <div class="form-row">
             <label>Produto<select name="productId" id="productSelect" required></select></label>
             <label>Quantidade<input name="quantity" type="number" min="1" value="1" required /></label>
@@ -250,42 +255,57 @@
           </div>
           <div class="form-row">
             <label>Nome do destinatário<input name="recipientName" required /></label>
+            <label>WhatsApp do destinatário<input name="recipientPhone" autocomplete="tel" /></label>
+          </div>
+          <div class="form-row">
             <label>Motivo<select name="reason" id="reasonSelect"></select></label>
+            <label>Quem assina a mensagem<input name="signature" placeholder="Seu nome ou deixe em branco" /></label>
           </div>
-          <label>Endereço de entrega<input name="address" autocomplete="street-address" required /></label>
+          <div class="form-row">
+            <label>CEP<input name="zipCode" id="zipCode" autocomplete="postal-code" inputmode="numeric" required /></label>
+            <label>Número<input name="number" autocomplete="address-line2" required /></label>
+          </div>
+          <label>Endereço de entrega<input name="address" id="address" autocomplete="street-address" required /></label>
           <div class="form-row three">
-            <label>CEP<input name="zipCode" autocomplete="postal-code" required /></label>
-            <label>Cidade<input name="city" autocomplete="address-level2" required /></label>
-            <label>UF<input name="state" maxlength="2" autocomplete="address-level1" required /></label>
+            <label>Bairro<input name="district" id="district" required /></label>
+            <label>Cidade<input name="city" id="city" autocomplete="address-level2" required /></label>
+            <label>UF<input name="state" id="state" maxlength="2" autocomplete="address-level1" required /></label>
           </div>
+          <label>Complemento<input name="complement" autocomplete="address-line3" /></label>
           <label>Mensagem pessoal<textarea name="notes" rows="3" placeholder="Sua mensagem de cuidado e fé."></textarea></label>
           <label class="checkbox-line">
             <input name="disclaimer" type="checkbox" required />
             <span>Declaro estar ciente de que o Abrace Deus é um item simbólico de fé e acolhimento.</span>
           </label>
+          <div class="shipping-box">
+            <div>
+              <span>Frete</span>
+              <strong id="shippingAmount">Informe o CEP</strong>
+            </div>
+            <button class="button secondary" type="button" id="calculateShipping">Calcular frete</button>
+          </div>
           <div class="summary" aria-live="polite">
-            <span>Total</span>
+            <span>Total com frete</span>
             <strong id="totalAmount">R$ 0,00</strong>
           </div>
-          <button class="button primary submit" type="submit">Gerar PIX e registrar pedido</button>
+          <button class="button primary submit" type="submit">Continuar para pagamento</button>
           <p class="form-status" id="formStatus" role="status"></p>
         </form>
       </section>
 
       <section class="payment-panel section" id="paymentPanel" hidden>
         <div>
-          <p class="eyebrow">Pedido criado</p>
-          <h2>Pague com PIX</h2>
-          <p>Escaneie o QR Code ou copie o código PIX. Guarde o identificador do pedido.</p>
+          <p class="eyebrow">Pagamento seguro</p>
+          <h2>Escolha como pagar</h2>
+          <p>Use PIX ou cartão de crédito pelo Mercado Pago. O status retorna para o pedido no Supabase.</p>
           <dl class="order-meta">
             <div><dt>Pedido</dt><dd id="orderId">-</dd></div>
             <div><dt>Valor</dt><dd id="paymentAmount">-</dd></div>
           </dl>
         </div>
-        <div class="qr-area">
-          <div id="qrcode"></div>
-          <textarea id="pixCode" readonly rows="5"></textarea>
-          <button class="button secondary" type="button" id="copyPix">Copiar código PIX</button>
+        <div class="payment-box">
+          <div id="paymentBrick_container"></div>
+          <p class="form-status" id="paymentStatus" role="status"></p>
         </div>
       </section>
 
@@ -312,6 +332,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
     <script src="./config.js"></script>
     <script src="./app.js"></script>
   </body>

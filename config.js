@@ -4,5 +4,8 @@ window.ABRACE_CONFIG = {
   pixKey: "03294572689",
   merchantName: "ABRACE DEUS",
   merchantCity: "SAO PAULO",
-  currency: "BRL"
+  currency: "BRL",
+  mercadoPagoPublicKey: "APP_USR-66f0df4e-d817-4ef1-8400-f1a80f1ff676",
+  checkoutFunctionUrl: "https://svbkrleuqtgzinloaquj.supabase.co/functions/v1/checkout",
+  shippingOriginZipCode: "00000000"
 };

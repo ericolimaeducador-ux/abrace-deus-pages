@@ -402,6 +402,31 @@ p {
   box-shadow: var(--shadow);
 }
 
+.checkout-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.checkout-steps span {
+  min-height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--muted-foreground);
+  background: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.checkout-steps span.active {
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
 .form-row {
   display: flex;
   gap: 14px;
@@ -490,6 +515,28 @@ textarea {
   color: var(--primary);
   font-family: "Playfair Display", serif;
   font-size: 1.55rem;
+}
+
+.shipping-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--muted), white 3%);
+}
+
+.shipping-box span {
+  display: block;
+  color: var(--muted-foreground);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.shipping-box strong {
+  color: var(--foreground);
 }
 
 .submit {
@@ -626,6 +673,19 @@ dd {
   background: white;
 }
 
+.payment-box {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+#paymentBrick_container {
+  min-height: 420px;
+}
+
 #qrcode img,
 #qrcode canvas {
   width: 256px;
@@ -728,6 +788,7 @@ footer p {
 
   .form-row.three,
   .donation-options,
+  .checkout-steps,
   .pain-grid,
   .step-grid,
   .product-grid,
@@ -735,6 +796,11 @@ footer p {
   .impact-grid,
   .testimonial-grid {
     grid-template-columns: 1fr;
+  }
+
+  .shipping-box {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   footer {

@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+
+supabase/.temp/
+
+*.log
+*.tmp
+*.bak
+*.local
+
+checkout-test.json
+webhook-test.json
+empty-webhook.json

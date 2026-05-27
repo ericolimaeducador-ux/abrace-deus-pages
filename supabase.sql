@@ -8,6 +8,8 @@ create table if not exists public.orders (
   product_id text not null,
   product_name text not null,
   quantity integer not null default 1 check (quantity > 0),
+  subtotal_cents integer,
+  shipping_cents integer not null default 0,
   total_cents integer not null check (total_cents > 0),
   total_amount numeric(10, 2),
   buyer_name text not null,
@@ -31,10 +33,15 @@ create table if not exists public.orders (
   recipient_state text,
   reason text,
   personal_message text,
+  message_signature text,
   is_anonymous boolean not null default false,
   wants_delivery_confirmation boolean not null default false,
   payment_method text not null default 'pix',
   payment_status text not null default 'pending',
+  mercado_pago_payment_id text,
+  mercado_pago_preference_id text,
+  mercado_pago_status text,
+  mercado_pago_status_detail text,
   order_status text not null default 'created',
   shipping_status text not null default 'aguardando_separacao',
   disclaimer_accepted boolean not null default false,
@@ -44,6 +51,8 @@ create table if not exists public.orders (
 );
 
 alter table public.orders add column if not exists order_number text;
+alter table public.orders add column if not exists subtotal_cents integer;
+alter table public.orders add column if not exists shipping_cents integer not null default 0;
 alter table public.orders add column if not exists total_amount numeric(10, 2);
 alter table public.orders add column if not exists buyer_cpf_cnpj text;
 alter table public.orders add column if not exists recipient_name text;
@@ -58,9 +67,14 @@ alter table public.orders add column if not exists recipient_city text;
 alter table public.orders add column if not exists recipient_state text;
 alter table public.orders add column if not exists reason text;
 alter table public.orders add column if not exists personal_message text;
+alter table public.orders add column if not exists message_signature text;
 alter table public.orders add column if not exists is_anonymous boolean not null default false;
 alter table public.orders add column if not exists wants_delivery_confirmation boolean not null default false;
 alter table public.orders add column if not exists payment_method text not null default 'pix';
+alter table public.orders add column if not exists mercado_pago_payment_id text;
+alter table public.orders add column if not exists mercado_pago_preference_id text;
+alter table public.orders add column if not exists mercado_pago_status text;
+alter table public.orders add column if not exists mercado_pago_status_detail text;
 alter table public.orders add column if not exists order_status text not null default 'created';
 alter table public.orders add column if not exists disclaimer_accepted boolean not null default false;
 
@@ -83,6 +97,30 @@ using (true);
 create index if not exists orders_created_at_idx on public.orders (created_at desc);
 create index if not exists orders_payment_status_idx on public.orders (payment_status);
 create index if not exists orders_order_status_idx on public.orders (order_status);
+create index if not exists orders_mercado_pago_payment_id_idx on public.orders (mercado_pago_payment_id);
+
+create table if not exists public.payment_events (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  order_id text not null,
+  provider text not null default 'mercado_pago',
+  provider_payment_id text,
+  event_type text not null,
+  status text,
+  payload jsonb not null default '{}'::jsonb
+);
+
+alter table public.payment_events enable row level security;
+
+drop policy if exists "payment_events_select_authenticated" on public.payment_events;
+create policy "payment_events_select_authenticated"
+on public.payment_events
+for select
+to authenticated
+using (true);
+
+create index if not exists payment_events_order_id_idx on public.payment_events (order_id);
+create index if not exists payment_events_provider_payment_id_idx on public.payment_events (provider_payment_id);
 
 create table if not exists public.donations (
   id uuid primary key default gen_random_uuid(),
