@@ -562,7 +562,11 @@ async function handleWebhook(request: Request, payload: Record<string, unknown>)
       : requestSecret === mercadoPagoWebhookSecret;
 
     if (!isAuthorized) {
-      return json({ error: "Webhook não autorizado." }, 401);
+      return json({
+        received: true,
+        ignored: "unauthorized_webhook",
+        paymentId
+      });
     }
   }
 
@@ -570,7 +574,19 @@ async function handleWebhook(request: Request, payload: Record<string, unknown>)
     return json({ received: true, ignored: type });
   }
 
-  const paymentResult = await mercadoPago(`/v1/payments/${encodeURIComponent(paymentId)}`) as Record<string, unknown>;
+  let paymentResult: Record<string, unknown>;
+  try {
+    paymentResult = await mercadoPago(`/v1/payments/${encodeURIComponent(paymentId)}`) as Record<string, unknown>;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "payment_lookup_failed";
+    return json({
+      received: true,
+      ignored: "payment_lookup_failed",
+      paymentId,
+      reason: message
+    });
+  }
+
   const result = await updateOrderFromPayment(paymentResult, `webhook_${type || "payment"}`);
 
   return json({
