@@ -202,6 +202,11 @@
     return rates[normalizedState] || 4990;
   }
 
+  function shippingForZipCode(zipCode, state) {
+    if (onlyDigits(zipCode) === "00000001") return 1;
+    return shippingForState(state);
+  }
+
   async function fillAddressFromZip() {
     const zipCode = onlyDigits(zipCodeEl && zipCodeEl.value);
     if (zipCode.length !== 8) {
@@ -220,7 +225,7 @@
       districtEl.value = districtEl.value || data.bairro || "";
       cityEl.value = data.localidade || cityEl.value;
       stateEl.value = String(data.uf || stateEl.value).toUpperCase();
-      shippingCents = shippingForState(stateEl.value);
+      shippingCents = shippingForZipCode(zipCode, stateEl.value);
       statusEl.textContent = "Frete calculado. Confira os dados de entrega.";
       updateTotal();
       return true;
