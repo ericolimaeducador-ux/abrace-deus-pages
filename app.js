@@ -103,6 +103,7 @@
   const $ = (selector) => document.querySelector(selector);
 
   const checkoutForm = $("#checkoutForm");
+  const checkoutSubmitButton = checkoutForm && checkoutForm.querySelector('button[type="submit"]');
   const donationForm = $("#donationForm");
   const institutionForm = $("#institutionForm");
   const productGrid = $("#productGrid");
@@ -443,6 +444,7 @@
   async function handleCheckout(event) {
     event.preventDefault();
     statusEl.textContent = "";
+    if (checkoutSubmitButton && checkoutSubmitButton.disabled) return;
 
     if (!checkoutForm.checkValidity()) {
       checkoutForm.reportValidity();
@@ -457,6 +459,10 @@
     const formData = new FormData(checkoutForm);
     const order = checkoutPayloadFromForm(formData);
     statusEl.textContent = "Criando pedido...";
+    if (checkoutSubmitButton) {
+      checkoutSubmitButton.disabled = true;
+      checkoutSubmitButton.textContent = "Criando pedido...";
+    }
 
     try {
       checkoutSession = await createCheckoutSession(order);
@@ -464,6 +470,10 @@
       await showPayment(checkoutSession);
     } catch (error) {
       statusEl.textContent = `Não foi possível iniciar o checkout: ${error.message}`;
+      if (checkoutSubmitButton) {
+        checkoutSubmitButton.disabled = false;
+        checkoutSubmitButton.textContent = "Continuar para pagamento";
+      }
     }
   }
 

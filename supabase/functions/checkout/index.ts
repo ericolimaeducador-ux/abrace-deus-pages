@@ -276,6 +276,38 @@ function orderStatusFromPaymentStatus(status: string) {
   return "payment_pending";
 }
 
+function paymentMessageFromMercadoPago(status: unknown, statusDetail: unknown) {
+  const detail = String(statusDetail || "");
+
+  if (status === "approved") return "Pagamento aprovado. Pedido liberado para separacao.";
+  if (status === "in_process") return "Pagamento em analise pelo Mercado Pago. Aguarde a confirmacao.";
+  if (status === "pending") return "Pagamento pendente. Aguarde a confirmacao do Mercado Pago.";
+  if (status === "cancelled") return "Pagamento cancelado. Tente novamente ou escolha outro meio de pagamento.";
+  if (status === "refunded") return "Pagamento estornado pelo Mercado Pago.";
+  if (status === "charged_back") return "Pagamento contestado. Aguarde analise.";
+
+  if (status === "rejected") {
+    if (detail === "cc_rejected_call_for_authorize") {
+      return "Pagamento recusado. Autorize a compra com a operadora do cartao ou tente outro meio de pagamento.";
+    }
+    if (detail === "cc_rejected_insufficient_amount") {
+      return "Pagamento recusado por saldo ou limite insuficiente. Tente outro cartao ou meio de pagamento.";
+    }
+    if (detail === "cc_rejected_bad_filled_security_code") {
+      return "Pagamento recusado. Confira o codigo de seguranca do cartao.";
+    }
+    if (detail === "cc_rejected_bad_filled_date") {
+      return "Pagamento recusado. Confira a data de vencimento do cartao.";
+    }
+    if (detail === "cc_rejected_bad_filled_other") {
+      return "Pagamento recusado. Confira os dados do cartao e tente novamente.";
+    }
+    return "Pagamento recusado pelo Mercado Pago. Tente outro cartao ou meio de pagamento.";
+  }
+
+  return "Pagamento recebido pelo Mercado Pago. Aguarde a confirmacao.";
+}
+
 function payloadFromFormEncoded(rawBody: string) {
   const params = new URLSearchParams(rawBody);
   const payload: Record<string, unknown> = {};
@@ -568,9 +600,7 @@ async function processPayment(payload: Record<string, unknown>) {
     id: paymentResult.id,
     status: paymentResult.status,
     statusDetail: paymentResult.status_detail,
-    message: syncedPayment.paymentStatus === "paid"
-      ? "Pagamento aprovado. Pedido liberado para separação."
-      : "Pagamento recebido pelo Mercado Pago. Aguarde a confirmação."
+    message: paymentMessageFromMercadoPago(paymentResult.status, paymentResult.status_detail)
   });
 }
 
