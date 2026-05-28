@@ -2,7 +2,7 @@ window.ABRACE_CONFIG = {
   supabaseUrl: "https://svbkrleuqtgzinloaquj.supabase.co",
   supabaseAnonKey: "sb_publishable_K3L4cpCvqxV81sQO2ULPJg_iqbTE0Mg",
   currency: "BRL",
-  mercadoPagoPublicKey: "TEST-4b7569fa-ad1d-41a2-8ac5-5c2ef2393d8d",
+  mercadoPagoPublicKey: "APP_USR-a8b8cb7b-95f7-4c3e-b133-a2bd7709314f",
   checkoutFunctionUrl: "https://svbkrleuqtgzinloaquj.supabase.co/functions/v1/checkout",
   shippingOriginZipCode: "00000000"
 };
