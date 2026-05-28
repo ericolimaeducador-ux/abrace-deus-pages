@@ -129,6 +129,67 @@ function requireState(value: unknown) {
   return state;
 }
 
+function splitFullName(name: unknown) {
+  const parts = cleanText(name, 160).split(" ").filter(Boolean);
+  const firstName = parts.shift() || "";
+  const lastName = parts.join(" ");
+
+  return {
+    firstName,
+    lastName: lastName || firstName
+  };
+}
+
+function phoneParts(phone: unknown) {
+  const digits = onlyDigits(phone);
+  return {
+    areaCode: digits.length >= 10 ? digits.slice(0, 2) : "",
+    number: digits.length >= 10 ? digits.slice(2) : digits
+  };
+}
+
+function stateNameFromUf(state: unknown) {
+  const states: Record<string, string> = {
+    AC: "Acre",
+    AL: "Alagoas",
+    AP: "Amapa",
+    AM: "Amazonas",
+    BA: "Bahia",
+    CE: "Ceara",
+    DF: "Distrito Federal",
+    ES: "Espirito Santo",
+    GO: "Goias",
+    MA: "Maranhao",
+    MT: "Mato Grosso",
+    MS: "Mato Grosso do Sul",
+    MG: "Minas Gerais",
+    PA: "Para",
+    PB: "Paraiba",
+    PR: "Parana",
+    PE: "Pernambuco",
+    PI: "Piaui",
+    RJ: "Rio de Janeiro",
+    RN: "Rio Grande do Norte",
+    RS: "Rio Grande do Sul",
+    RO: "Rondonia",
+    RR: "Roraima",
+    SC: "Santa Catarina",
+    SP: "Sao Paulo",
+    SE: "Sergipe",
+    TO: "Tocantins"
+  };
+
+  const normalizedState = String(state || "").toUpperCase();
+  return states[normalizedState] || normalizedState;
+}
+
+function productDescription(productId: unknown) {
+  if (productId === "teste-producao") return "Produto temporario para validacao de pagamento real.";
+  if (productId === "abraco-luto") return "Kit surpresa de fe e acolhimento para momentos de luto.";
+  if (productId === "doe-um-abraco") return "Doacao de kit para pessoas indicadas por instituicoes parceiras.";
+  return "Kit surpresa de fe, acolhimento e cuidado.";
+}
+
 function makeOrderId() {
   return `ABD-${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
 }
@@ -307,6 +368,9 @@ function paymentMessageFromMercadoPago(status: unknown, statusDetail: unknown) {
     }
     if (detail === "cc_rejected_bad_filled_other") {
       return "Pagamento recusado. Confira os dados do cartao e tente novamente.";
+    }
+    if (detail === "cc_rejected_high_risk") {
+      return "Pagamento recusado pela analise de seguranca do Mercado Pago. Tente outro cartao ou meio de pagamento.";
     }
     return "Pagamento recusado pelo Mercado Pago. Tente outro cartao ou meio de pagamento.";
   }
@@ -552,18 +616,31 @@ async function processPayment(payload: Record<string, unknown>) {
     ? sanitizedPayment.payer as Record<string, unknown>
     : {};
   const notificationUrl = mercadoPagoWebhookUrl();
+  const buyerName = splitFullName(order.buyer_name);
+  const buyerPhone = phoneParts(order.buyer_phone);
+  const productUnitPrice = Number(order.subtotal_cents || 0) / 100 / Number(order.quantity || 1);
+  const shippingUnitPrice = Number(order.shipping_cents || 0) / 100;
 
   const paymentPayload = {
     ...sanitizedPayment,
+    binary_mode: false,
     transaction_amount: Number(order.total_cents) / 100,
     description: `${order.product_name} - ${order.order_id}`,
     external_reference: order.order_id,
     statement_descriptor: "ABRACE DEUS",
+    metadata: {
+      order_id: order.order_id,
+      product_id: order.product_id,
+      shipping_zip_code: order.shipping_zip_code
+    },
     ...(notificationUrl ? { notification_url: notificationUrl } : {}),
     payer: {
       ...payerFromBrick,
+      entity_type: "individual",
+      type: "customer",
       email: order.buyer_email,
-      first_name: order.buyer_name,
+      first_name: buyerName.firstName,
+      last_name: buyerName.lastName,
       identification: {
         type: "CPF",
         number: onlyDigits(order.buyer_cpf)
@@ -574,21 +651,43 @@ async function processPayment(payload: Record<string, unknown>) {
         {
           id: order.product_id,
           title: order.product_name,
+          description: productDescription(order.product_id),
+          category_id: "gifts",
           quantity: order.quantity,
-          unit_price: Number(order.subtotal_cents || 0) / 100 / Number(order.quantity || 1)
+          unit_price: productUnitPrice,
+          type: "gift",
+          warranty: false
         },
         {
           id: "frete",
           title: "Frete",
+          description: "Frete para entrega do pedido.",
+          category_id: "shipping",
           quantity: 1,
-          unit_price: Number(order.shipping_cents || 0) / 100
+          unit_price: shippingUnitPrice,
+          type: "shipping",
+          warranty: false
         }
       ],
       payer: {
-        first_name: order.buyer_name,
-        phone: { number: onlyDigits(order.buyer_phone) },
+        first_name: buyerName.firstName,
+        last_name: buyerName.lastName,
+        phone: {
+          area_code: buyerPhone.areaCode,
+          number: buyerPhone.number
+        },
         address: {
           zip_code: order.shipping_zip_code,
+          street_name: order.shipping_address,
+          street_number: order.recipient_number,
+          city: order.shipping_city
+        }
+      },
+      shipments: {
+        receiver_address: {
+          zip_code: order.shipping_zip_code,
+          state_name: stateNameFromUf(order.shipping_state),
+          city_name: order.shipping_city,
           street_name: order.shipping_address,
           street_number: order.recipient_number
         }
