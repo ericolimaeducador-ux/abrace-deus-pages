@@ -47,8 +47,8 @@ Para frete real com Correios, Melhor Envio ou Frenet, substitua `shippingForStat
 
 Configurar o webhook no Mercado Pago:
 
-- URL: `https://SEU_PROJECT_REF.supabase.co/functions/v1/checkout/webhook?secret=SEU_SEGREDO`
+- URL de produção: `https://svbkrleuqtgzinloaquj.supabase.co/functions/v1/checkout/webhook`
 - Eventos: pagamentos criados e atualizados.
-- Se o Mercado Pago permitir header customizado, também pode usar `x-webhook-secret` com o mesmo valor de `MERCADO_PAGO_WEBHOOK_SECRET`.
+- Copie a assinatura secreta gerada pelo Mercado Pago e salve no Supabase como `MERCADO_PAGO_WEBHOOK_SECRET`.
 
-O webhook busca o pagamento no Mercado Pago, confere o `external_reference` do pedido e atualiza `orders` e `payment_events`.
+A função também envia `notification_url` automaticamente ao Mercado Pago ao criar preferências e pagamentos. O webhook busca o pagamento no Mercado Pago, confere o `external_reference` do pedido e atualiza `orders` e `payment_events`.

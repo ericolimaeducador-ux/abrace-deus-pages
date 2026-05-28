@@ -64,6 +64,9 @@ const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
 const mercadoPagoAccessToken = Deno.env.get("MERCADO_PAGO_ACCESS_TOKEN") || "";
 const siteUrl = Deno.env.get("SITE_URL") || "https://abracedeus.com.br";
 const mercadoPagoWebhookSecret = Deno.env.get("MERCADO_PAGO_WEBHOOK_SECRET") || "";
+const checkoutFunctionUrl =
+  Deno.env.get("CHECKOUT_FUNCTION_URL") ||
+  (supabaseUrl ? `${supabaseUrl.replace(/\/$/, "")}/functions/v1/checkout` : "");
 
 const supabase = createClient(supabaseUrl, serviceRoleKey, {
   auth: { persistSession: false }
@@ -314,6 +317,29 @@ function timingSafeEqual(a: string, b: string) {
   return result === 0;
 }
 
+function appendSearchParam(rawUrl: string, key: string, value: string) {
+  const separator = rawUrl.includes("?") ? "&" : "?";
+  return `${rawUrl}${separator}${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+}
+
+function mercadoPagoWebhookUrl() {
+  const configuredUrl = Deno.env.get("MERCADO_PAGO_WEBHOOK_URL") || "";
+  let url = configuredUrl || `${checkoutFunctionUrl.replace(/\/$/, "")}/webhook`;
+
+  if (!url || url === "/webhook") return "";
+  if (!/[?&]source_news=/.test(url)) url = appendSearchParam(url, "source_news", "webhooks");
+  if (mercadoPagoWebhookSecret && !/[?&]secret=/.test(url)) {
+    url = appendSearchParam(url, "secret", mercadoPagoWebhookSecret);
+  }
+
+  return url;
+}
+
+function signatureDataIdFromRequest(url: URL, fallbackDataId: string) {
+  const dataId = url.searchParams.get("data.id") || url.searchParams.get("id") || fallbackDataId;
+  return /^[a-z0-9]+$/i.test(dataId) ? dataId.toLowerCase() : dataId;
+}
+
 async function verifyMercadoPagoSignature(request: Request, dataId: string) {
   if (!mercadoPagoWebhookSecret) return true;
 
@@ -377,9 +403,12 @@ async function updateOrderFromPayment(paymentResult: Record<string, unknown>, ev
 }
 
 async function createPreference(order: Record<string, unknown>) {
+  const notificationUrl = mercadoPagoWebhookUrl();
+
   return await mercadoPago("/checkout/preferences", {
     external_reference: order.order_id,
     statement_descriptor: "ABRACE DEUS",
+    ...(notificationUrl ? { notification_url: notificationUrl } : {}),
     items: [
       {
         id: order.product_id,
@@ -484,6 +513,7 @@ async function processPayment(payload: Record<string, unknown>) {
   const payerFromBrick = typeof sanitizedPayment.payer === "object" && sanitizedPayment.payer
     ? sanitizedPayment.payer as Record<string, unknown>
     : {};
+  const notificationUrl = mercadoPagoWebhookUrl();
 
   const paymentPayload = {
     ...sanitizedPayment,
@@ -491,6 +521,7 @@ async function processPayment(payload: Record<string, unknown>) {
     description: `${order.product_name} - ${order.order_id}`,
     external_reference: order.order_id,
     statement_descriptor: "ABRACE DEUS",
+    ...(notificationUrl ? { notification_url: notificationUrl } : {}),
     payer: {
       ...payerFromBrick,
       email: order.buyer_email,
@@ -574,9 +605,13 @@ async function handleWebhook(request: Request, payload: Record<string, unknown>)
   if (mercadoPagoWebhookSecret) {
     const hasMercadoPagoSignature = request.headers.has("x-signature") || request.headers.has("x-request-id");
     const requestSecret = request.headers.get("x-webhook-secret") || url.searchParams.get("secret") || "";
-    const isAuthorized = hasMercadoPagoSignature
-      ? await verifyMercadoPagoSignature(request, paymentId)
-      : requestSecret === mercadoPagoWebhookSecret;
+    const signatureDataId = signatureDataIdFromRequest(url, paymentId);
+    const isAuthorizedBySignature = hasMercadoPagoSignature
+      ? await verifyMercadoPagoSignature(request, signatureDataId)
+      : false;
+    const isAuthorizedBySecret =
+      Boolean(requestSecret) && timingSafeEqual(requestSecret, mercadoPagoWebhookSecret);
+    const isAuthorized = isAuthorizedBySignature || isAuthorizedBySecret;
 
     if (!isAuthorized) {
       return json({
