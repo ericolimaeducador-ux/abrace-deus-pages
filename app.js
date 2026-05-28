@@ -14,7 +14,7 @@
       category: "Teste",
       description: "Produto temporário para validar pagamento real em produção.",
       longDescription: "Use apenas para teste operacional do checkout.",
-      price: 100,
+      price: 500,
       imageUrl: "https://media.base44.com/images/public/6a0cc7e610b06c3387f86eda/c608e95a9_generated_57ccfc42.png",
       cta: "Testar pagamento"
     },

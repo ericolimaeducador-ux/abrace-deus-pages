@@ -54,7 +54,7 @@ type NormalizedOrder = {
 };
 
 const products: Product[] = [
-  { id: "teste-producao", name: "Teste de Producao", price: 100 },
+  { id: "teste-producao", name: "Teste de Producao", price: 500 },
   { id: "abraco-essencial", name: "Abraço Essencial", price: 6990 },
   { id: "abraco-luto", name: "Abraço para Luto", price: 8990 },
   { id: "doe-um-abraco", name: "Doe um Abraço", price: 4990 }
