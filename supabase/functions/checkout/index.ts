@@ -668,30 +668,7 @@ async function processPayment(payload: Record<string, unknown>) {
           type: "shipping",
           warranty: false
         }
-      ],
-      payer: {
-        first_name: buyerName.firstName,
-        last_name: buyerName.lastName,
-        phone: {
-          area_code: buyerPhone.areaCode,
-          number: buyerPhone.number
-        },
-        address: {
-          zip_code: order.shipping_zip_code,
-          street_name: order.shipping_address,
-          street_number: order.recipient_number,
-          city: order.shipping_city
-        }
-      },
-      shipments: {
-        receiver_address: {
-          zip_code: order.shipping_zip_code,
-          state_name: stateNameFromUf(order.shipping_state),
-          city_name: order.shipping_city,
-          street_name: order.shipping_address,
-          street_number: order.recipient_number
-        }
-      }
+      ]
     }
   };
 
