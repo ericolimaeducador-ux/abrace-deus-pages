@@ -431,7 +431,7 @@
           creditCard: "all",
           debitCard: "all",
           bankTransfer: "all",
-          mercadoPago: session.preferenceId ? ["wallet_purchase"] : [],
+          mercadoPago: session.preferenceId ? "all" : [],
           prepaidCard: "all"
         }
       },
@@ -439,7 +439,13 @@
         onReady: () => {
           paymentStatusEl.textContent = "";
         },
-        onSubmit: ({ formData }) => new Promise((resolve, reject) => {
+        onSubmit: ({ selectedPaymentMethod, formData }) => new Promise((resolve, reject) => {
+          if (selectedPaymentMethod === "wallet_purchase") {
+            paymentStatusEl.textContent = "Continue pelo Mercado Pago para concluir o pagamento.";
+            resolve();
+            return;
+          }
+
           paymentStatusEl.textContent = "Processando pagamento...";
           submitMercadoPagoPayment(formData)
             .then((result) => {
