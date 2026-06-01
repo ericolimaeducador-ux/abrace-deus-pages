@@ -1,7 +1,7 @@
 # Abrace Deus - mapa do código original
 
-Este arquivo registra a extração do código Base44/React original para a versão
-estática publicada em GitHub Pages.
+Este arquivo registra o mapeamento dos modelos de dados para as tabelas Supabase
+na versão estática publicada em GitHub Pages.
 
 ## Modelos extraídos
 

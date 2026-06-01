@@ -35,6 +35,6 @@ Se usar GitHub Actions, o workflow em `.github/workflows/pages.yml` publica o co
 
 ## Observações
 
-Este projeto substitui a dependência do Base44 por HTML, CSS, JavaScript e Supabase.
+Este projeto é construído com HTML, CSS, JavaScript e Supabase.
 Se o Supabase não estiver configurado, pedidos, doações e instituições ainda são
 salvos temporariamente no `localStorage` do navegador para teste local.

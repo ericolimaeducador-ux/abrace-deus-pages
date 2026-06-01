@@ -8,25 +8,69 @@
   const config = Object.assign({}, fallbackConfig, window.ABRACE_CONFIG || {});
   const products = [
     {
-      id: "abraco-essencial",
-      slug: "abraco-essencial",
-      name: "Abraço Essencial",
-      category: "Essencial",
-      description: "Kit surpresa de fé e acolhimento para lembrar que Deus continua perto.",
-      longDescription: "Uma experiência simples e profunda para transformar cuidado em presença.",
+      id: "abraco-tristeza",
+      slug: "abraco-tristeza",
+      name: "Abraço para Tristeza",
+      category: "Tristeza",
+      description: "Para quem está com o coração pesado, sem saber bem por quê. Um gesto que não exige explicação.",
+      longDescription: "Quando a tristeza chega sem aviso, palavras não bastam. Este kit é um gesto silencioso de presença.",
+      price: 5990,
+      imageUrl: "https://placehold.co/600x600/f0e8d8/b8894a?text=Abrace+Deus",
+      cta: "Enviar este abraço"
+    },
+    {
+      id: "abraco-ansiedade",
+      slug: "abraco-ansiedade",
+      name: "Abraço para Ansiedade",
+      category: "Ansiedade",
+      description: "Para quem está sobrecarregado por dentro e precisa de um momento de pausa e respiração.",
+      longDescription: "Um convite para desacelerar, respirar e lembrar que Deus ainda está presente no caos.",
       price: 6990,
-      imageUrl: "https://media.base44.com/images/public/6a0cc7e610b06c3387f86eda/c608e95a9_generated_57ccfc42.png",
-      cta: "Escolher Kit"
+      imageUrl: "https://placehold.co/600x600/f0e8d8/b8894a?text=Abrace+Deus",
+      cta: "Enviar este abraço"
+    },
+    {
+      id: "abraco-solidao",
+      slug: "abraco-solidao",
+      name: "Abraço para Solidão",
+      category: "Solidão",
+      description: "Para quem está se sentindo esquecido. Um gesto que diz: você não passou despercebido.",
+      longDescription: "A solidão dói porque parece invisível. Este kit é a prova de que alguém te viu.",
+      price: 7490,
+      imageUrl: "https://placehold.co/600x600/f0e8d8/b8894a?text=Abrace+Deus",
+      cta: "Enviar este abraço"
+    },
+    {
+      id: "abraco-enfermidade",
+      slug: "abraco-enfermidade",
+      name: "Abraço para Enfermidade",
+      category: "Enfermidade",
+      description: "Para quem está de cama, em tratamento ou cuidando de alguém doente. Presença que conforta.",
+      longDescription: "Quando o corpo adoece, a alma também precisa de cuidado. Um gesto de fé e amparo.",
+      price: 7990,
+      imageUrl: "https://placehold.co/600x600/f0e8d8/b8894a?text=Abrace+Deus",
+      cta: "Enviar este abraço"
     },
     {
       id: "abraco-luto",
       slug: "abraco-luto",
       name: "Abraço para Luto",
       category: "Luto",
-      description: "Um gesto de cuidado para quem está atravessando saudade e dor.",
-      longDescription: "Criado para momentos em que a presença fala mais que explicações.",
+      description: "Um gesto de cuidado para quem está atravessando saudade e dor. Presença que fala mais que palavras.",
+      longDescription: "Criado para momentos em que a presença fala mais que qualquer explicação.",
       price: 8990,
-      imageUrl: "https://media.base44.com/images/public/6a0cc7e610b06c3387f86eda/c608e95a9_generated_57ccfc42.png",
+      imageUrl: "https://placehold.co/600x600/f0e8d8/b8894a?text=Abrace+Deus",
+      cta: "Enviar este abraço"
+    },
+    {
+      id: "abraco-aflicao",
+      slug: "abraco-aflicao",
+      name: "Abraço na Profunda Aflição",
+      category: "Aflição",
+      description: "Para momentos em que a dor parece grande demais. Um presente que diz: ainda há um abraço aqui.",
+      longDescription: "Quando tudo parece desabar, este kit é um gesto de que Deus não abandona quem está no fundo.",
+      price: 9990,
+      imageUrl: "https://placehold.co/600x600/f0e8d8/b8894a?text=Abrace+Deus",
       cta: "Enviar este abraço"
     },
     {
@@ -37,16 +81,18 @@
       description: "Doe um kit para pessoas indicadas por instituições parceiras.",
       longDescription: "Sua generosidade ajuda a campanha a alcançar quem mais precisa.",
       price: 4990,
-      imageUrl: "https://media.base44.com/images/public/6a0cc7e610b06c3387f86eda/c608e95a9_generated_57ccfc42.png",
+      imageUrl: "https://placehold.co/600x600/f0e8d8/b8894a?text=Abrace+Deus",
       cta: "Doar"
     }
   ];
 
   const reasons = [
-    "Luto",
+    "Tristeza",
     "Ansiedade ou angústia",
-    "Enfermidade",
     "Solidão",
+    "Enfermidade",
+    "Luto",
+    "Profunda aflição",
     "Crise familiar",
     "Separação",
     "Desânimo espiritual",
