@@ -8,17 +8,6 @@
   const config = Object.assign({}, fallbackConfig, window.ABRACE_CONFIG || {});
   const products = [
     {
-      id: "teste-producao",
-      slug: "teste-producao",
-      name: "Teste de Produção",
-      category: "Teste",
-      description: "Produto temporário para validar pagamento real em produção.",
-      longDescription: "Use apenas para teste operacional do checkout.",
-      price: 500,
-      imageUrl: "https://media.base44.com/images/public/6a0cc7e610b06c3387f86eda/c608e95a9_generated_57ccfc42.png",
-      cta: "Testar pagamento"
-    },
-    {
       id: "abraco-essencial",
       slug: "abraco-essencial",
       name: "Abraço Essencial",
