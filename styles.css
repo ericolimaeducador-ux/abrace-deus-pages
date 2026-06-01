@@ -78,10 +78,25 @@ img {
 }
 
 .brand img {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
+  width: 46px;
+  height: 46px;
+  border-radius: 6px;
   object-fit: cover;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.institution-logo {
+  width: 74px;
+  height: 42px;
+  padding: 4px 7px;
+  border-radius: 6px;
+  object-fit: contain;
+  background: white;
 }
 
 nav {
@@ -322,6 +337,8 @@ p {
 }
 
 .product-card {
+  --card-accent: var(--primary);
+  position: relative;
   display: grid;
   gap: 10px;
   overflow: hidden;
@@ -329,17 +346,51 @@ p {
   background: white;
 }
 
+.product-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: var(--card-accent);
+}
+
+.product-card:nth-child(2) {
+  --card-accent: hsl(168, 48%, 35%);
+}
+
+.product-card:nth-child(3) {
+  --card-accent: hsl(335, 38%, 47%);
+}
+
+.product-card:nth-child(4) {
+  --card-accent: hsl(44, 62%, 42%);
+}
+
+.product-card:nth-child(5) {
+  --card-accent: hsl(254, 34%, 48%);
+}
+
+.product-card:nth-child(6) {
+  --card-accent: hsl(12, 58%, 45%);
+}
+
+.product-card:nth-child(7) {
+  --card-accent: hsl(145, 48%, 36%);
+}
+
 .product-image {
   aspect-ratio: 4 / 3;
   margin: -14px -14px 0;
   overflow: hidden;
-  background: var(--muted);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--card-accent), white 78%), white);
 }
 
 .product-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   transition: transform 0.7s ease;
 }
 
@@ -347,14 +398,22 @@ p {
   transform: scale(1.04);
 }
 
+.product-card:nth-child(2n) .product-image img {
+  object-position: 45% center;
+}
+
+.product-card:nth-child(3n) .product-image img {
+  object-position: 55% center;
+}
+
 .category {
   display: inline-flex;
   width: fit-content;
   padding: 4px 8px;
-  border: 1px solid color-mix(in srgb, var(--primary), transparent 70%);
+  border: 1px solid color-mix(in srgb, var(--card-accent), transparent 68%);
   border-radius: 999px;
-  color: var(--primary);
-  background: color-mix(in srgb, var(--primary), transparent 88%);
+  color: var(--card-accent);
+  background: color-mix(in srgb, var(--card-accent), transparent 89%);
   font-size: 0.72rem;
   font-weight: 800;
 }
