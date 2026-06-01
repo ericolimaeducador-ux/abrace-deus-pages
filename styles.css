@@ -1,18 +1,18 @@
 :root {
-  color-scheme: dark;
-  --background: hsl(220, 30%, 6%);
-  --foreground: hsl(40, 20%, 95%);
-  --card: hsl(220, 25%, 10%);
-  --muted: hsl(220, 20%, 14%);
-  --muted-foreground: hsl(220, 10%, 62%);
-  --primary: hsl(40, 60%, 55%);
-  --primary-foreground: hsl(220, 30%, 6%);
-  --accent: hsl(330, 45%, 40%);
-  --border: hsl(220, 20%, 18%);
-  --danger: hsl(0, 84%, 60%);
-  --green: hsl(145, 62%, 43%);
-  --shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
-  --radius: 8px;
+  color-scheme: light;
+  --background: hsl(40, 38%, 97%);
+  --foreground: hsl(215, 28%, 20%);
+  --card: hsl(36, 28%, 93%);
+  --muted: hsl(36, 22%, 89%);
+  --muted-foreground: hsl(215, 12%, 48%);
+  --primary: hsl(34, 52%, 50%);
+  --primary-foreground: hsl(40, 38%, 97%);
+  --accent: hsl(340, 28%, 52%);
+  --border: hsl(36, 18%, 82%);
+  --danger: hsl(0, 65%, 55%);
+  --green: hsl(145, 48%, 38%);
+  --shadow: 0 24px 70px rgba(100, 75, 30, 0.09);
+  --radius: 10px;
 }
 
 * {

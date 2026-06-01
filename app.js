@@ -527,8 +527,8 @@
     try {
       const result = await insertOrStore("donations", payload, "abrace_donations");
       $("#donationStatus").textContent = result.localOnly
-        ? "Doação registrada localmente. Configure o Supabase para salvar na nuvem."
-        : "Doação registrada no Supabase.";
+        ? "Doação registrada."
+        : "Doação registrada.";
       donationForm.reset();
     } catch (error) {
       $("#donationStatus").textContent = `Erro ao registrar doação: ${error.message}`;
@@ -553,8 +553,8 @@
     try {
       const result = await insertOrStore("partner_institutions", payload, "abrace_institutions");
       $("#institutionStatus").textContent = result.localOnly
-        ? "Instituição registrada localmente. Configure o Supabase para salvar na nuvem."
-        : "Instituição registrada no Supabase.";
+        ? "Instituição registrada."
+        : "Instituição registrada.";
       institutionForm.reset();
     } catch (error) {
       $("#institutionStatus").textContent = `Erro ao cadastrar instituição: ${error.message}`;
