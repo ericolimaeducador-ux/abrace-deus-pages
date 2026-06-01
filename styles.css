@@ -1,14 +1,14 @@
 :root {
   color-scheme: light;
   --background: hsl(40, 38%, 97%);
-  --foreground: hsl(215, 28%, 20%);
+  --foreground: hsl(215, 32%, 14%);
   --card: hsl(36, 28%, 93%);
   --muted: hsl(36, 22%, 89%);
-  --muted-foreground: hsl(215, 12%, 48%);
-  --primary: hsl(34, 52%, 50%);
+  --muted-foreground: hsl(215, 18%, 32%);
+  --primary: hsl(203, 57%, 38%);
   --primary-foreground: hsl(40, 38%, 97%);
   --accent: hsl(340, 28%, 52%);
-  --border: hsl(36, 18%, 82%);
+  --border: hsl(36, 18%, 76%);
   --danger: hsl(0, 65%, 55%);
   --green: hsl(145, 48%, 38%);
   --shadow: 0 24px 70px rgba(100, 75, 30, 0.09);
@@ -40,6 +40,17 @@ img {
   max-width: 100%;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .site-header {
   position: fixed;
   inset: 0 0 auto;
@@ -50,8 +61,8 @@ img {
   gap: 20px;
   min-height: 64px;
   padding: 10px clamp(16px, 4vw, 56px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  background: hsla(220, 30%, 6%, 0.82);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  background: hsla(215, 32%, 10%, 0.9);
   backdrop-filter: blur(18px);
 }
 
@@ -62,7 +73,7 @@ img {
   font-family: "Playfair Display", serif;
   font-size: 1.35rem;
   font-weight: 700;
-  color: var(--primary);
+  color: white;
   white-space: nowrap;
 }
 
@@ -82,14 +93,14 @@ nav {
 nav a {
   padding: 9px 11px;
   border-radius: var(--radius);
-  color: var(--muted-foreground);
+  color: rgba(255, 255, 255, 0.82);
   font-size: 0.9rem;
   font-weight: 600;
 }
 
 nav a:hover {
-  color: var(--foreground);
-  background: var(--muted);
+  color: white;
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .button {
@@ -122,24 +133,22 @@ nav a:hover {
 
 .hero {
   position: relative;
-  display: flex;
-  align-items: center;
-  min-height: 92vh;
+  min-height: auto;
   overflow: hidden;
-  padding: 112px clamp(18px, 5vw, 80px) 68px;
+  padding-top: 64px;
+  background: var(--background);
 }
 
-.hero-media,
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-}
-
-.hero-media img {
+.hero-banner-link {
+  display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.42;
+  background: var(--background);
+}
+
+.hero-banner-link img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 .hero-overlay {
@@ -308,18 +317,21 @@ p {
 }
 
 .product-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
 }
 
 .product-card {
   display: grid;
-  gap: 18px;
+  gap: 10px;
   overflow: hidden;
+  padding: 14px;
+  background: white;
 }
 
 .product-image {
-  aspect-ratio: 1;
-  margin: -24px -24px 2px;
+  aspect-ratio: 4 / 3;
+  margin: -14px -14px 0;
   overflow: hidden;
   background: var(--muted);
 }
@@ -338,28 +350,53 @@ p {
 .category {
   display: inline-flex;
   width: fit-content;
-  padding: 5px 10px;
+  padding: 4px 8px;
   border: 1px solid color-mix(in srgb, var(--primary), transparent 70%);
   border-radius: 999px;
   color: var(--primary);
   background: color-mix(in srgb, var(--primary), transparent 88%);
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 800;
+}
+
+.product-card h3 {
+  font-size: 1.03rem;
+  line-height: 1.18;
+}
+
+.product-card p {
+  display: -webkit-box;
+  min-height: 3.85em;
+  margin: 0;
+  overflow: hidden;
+  color: var(--muted-foreground);
+  font-size: 0.88rem;
+  line-height: 1.42;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 .price {
   color: var(--primary);
   font-family: "Playfair Display", serif;
-  font-size: 2rem;
+  font-size: 1.38rem;
   font-weight: 800;
 }
 
 .card-footer {
   display: flex;
-  align-items: center;
+  align-items: stretch;
+  flex-direction: column;
   justify-content: space-between;
-  gap: 14px;
+  gap: 10px;
   margin-top: auto;
+}
+
+.product-card .button {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 12px;
+  font-size: 0.84rem;
 }
 
 .usage-grid {
@@ -754,10 +791,13 @@ footer p {
   }
 
   .step-grid,
-  .product-grid,
   .usage-grid,
   .testimonial-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -791,11 +831,14 @@ footer p {
   .checkout-steps,
   .pain-grid,
   .step-grid,
-  .product-grid,
   .usage-grid,
   .impact-grid,
   .testimonial-grid {
     grid-template-columns: 1fr;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .shipping-box {
@@ -817,5 +860,9 @@ footer p {
   .section {
     padding-left: 16px;
     padding-right: 16px;
+  }
+
+  .product-grid {
+    grid-template-columns: 1fr;
   }
 }

@@ -6,6 +6,7 @@
   };
 
   const config = Object.assign({}, fallbackConfig, window.ABRACE_CONFIG || {});
+  const kitImageUrl = "./assets/caixakitabracedeus.png";
   const products = [
     {
       id: "abraco-tristeza",
@@ -15,7 +16,7 @@
       description: "Para quem está com o coração pesado, sem saber bem por quê. Um gesto que não exige explicação.",
       longDescription: "Quando a tristeza chega sem aviso, palavras não bastam. Este kit é um gesto silencioso de presença.",
       price: 5990,
-      imageUrl: "https://placehold.co/600x600/f0e8d8/b8894a?text=Abrace+Deus",
+      imageUrl: kitImageUrl,
       cta: "Enviar este abraço"
     },
     {
@@ -26,7 +27,7 @@
       description: "Para quem está sobrecarregado por dentro e precisa de um momento de pausa e respiração.",
       longDescription: "Um convite para desacelerar, respirar e lembrar que Deus ainda está presente no caos.",
       price: 6990,
-      imageUrl: "https://placehold.co/600x600/f0e8d8/b8894a?text=Abrace+Deus",
+      imageUrl: kitImageUrl,
       cta: "Enviar este abraço"
     },
     {
@@ -37,7 +38,7 @@
       description: "Para quem está se sentindo esquecido. Um gesto que diz: você não passou despercebido.",
       longDescription: "A solidão dói porque parece invisível. Este kit é a prova de que alguém te viu.",
       price: 7490,
-      imageUrl: "https://placehold.co/600x600/f0e8d8/b8894a?text=Abrace+Deus",
+      imageUrl: kitImageUrl,
       cta: "Enviar este abraço"
     },
     {
@@ -48,7 +49,7 @@
       description: "Para quem está de cama, em tratamento ou cuidando de alguém doente. Presença que conforta.",
       longDescription: "Quando o corpo adoece, a alma também precisa de cuidado. Um gesto de fé e amparo.",
       price: 7990,
-      imageUrl: "https://placehold.co/600x600/f0e8d8/b8894a?text=Abrace+Deus",
+      imageUrl: kitImageUrl,
       cta: "Enviar este abraço"
     },
     {
@@ -59,7 +60,7 @@
       description: "Um gesto de cuidado para quem está atravessando saudade e dor. Presença que fala mais que palavras.",
       longDescription: "Criado para momentos em que a presença fala mais que qualquer explicação.",
       price: 8990,
-      imageUrl: "https://placehold.co/600x600/f0e8d8/b8894a?text=Abrace+Deus",
+      imageUrl: kitImageUrl,
       cta: "Enviar este abraço"
     },
     {
@@ -70,7 +71,7 @@
       description: "Para momentos em que a dor parece grande demais. Um presente que diz: ainda há um abraço aqui.",
       longDescription: "Quando tudo parece desabar, este kit é um gesto de que Deus não abandona quem está no fundo.",
       price: 9990,
-      imageUrl: "https://placehold.co/600x600/f0e8d8/b8894a?text=Abrace+Deus",
+      imageUrl: kitImageUrl,
       cta: "Enviar este abraço"
     },
     {
@@ -81,7 +82,7 @@
       description: "Doe um kit para pessoas indicadas por instituições parceiras.",
       longDescription: "Sua generosidade ajuda a campanha a alcançar quem mais precisa.",
       price: 4990,
-      imageUrl: "https://placehold.co/600x600/f0e8d8/b8894a?text=Abrace+Deus",
+      imageUrl: kitImageUrl,
       cta: "Doar"
     }
   ];
