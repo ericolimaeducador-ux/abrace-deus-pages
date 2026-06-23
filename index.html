@@ -3,159 +3,146 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Abrace Deus - Quando palavras não bastam, envie um abraço</title>
-    <meta
-      name="description"
-      content="Envie um kit surpresa de fé, acolhimento e cuidado para alguém que está passando por dias difíceis."
-    />
-    <meta
-      name="keywords"
-      content="Abrace Deus, kit de fé, presente para luto, presente cristão, consolo espiritual, doação de kits"
-    />
-    <meta property="og:title" content="Abrace Deus - Quando palavras não bastam, envie um abraço" />
+    <title>Abrace Deus — Quando palavras não bastam, envie um abraço</title>
+    <meta name="description" content="Envie um kit surpresa de fé, acolhimento e cuidado para alguém que está passando por dias difíceis." />
+    <meta property="og:title" content="Abrace Deus — Quando palavras não bastam, envie um abraço" />
     <meta property="og:description" content="Um kit surpresa de fé, acolhimento e cuidado para quem está passando por momentos difíceis." />
     <meta property="og:type" content="website" />
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <header class="site-header">
-      <a class="brand" href="#inicio" aria-label="Abrace Deus">
-        <img
-          src="./assets/abracedeuslogo.png"
-          alt="Abrace Deus"
-        />
+
+    <!-- HEADER -->
+    <header class="hdr">
+      <a class="hdr-brand" href="#inicio">
+        <img src="./assets/abracedeuslogo.png" alt="Abrace Deus" />
         <span>Abrace Deus</span>
       </a>
-      <nav aria-label="Navegação principal">
-        <a href="#sobre">A Campanha</a>
+      <nav class="hdr-nav">
+        <a href="#sobre">Como funciona</a>
         <a href="#kits">Kits</a>
-        <a href="#doar">Doe um Abraço</a>
-        <a href="#instituicoes">Instituições</a>
+        <a href="#doar">Doe</a>
         <a href="#faq">FAQ</a>
       </nav>
-      <div class="header-actions">
-        <img class="institution-logo" src="./assets/sobem.png" alt="SOBEM Enfermagem Missionária" />
-        <a class="button primary header-cta" href="#checkout">Enviar um Abraço</a>
+      <div class="hdr-end">
+        <img class="hdr-sobem" src="./assets/sobem.png" alt="SOBEM" />
+        <a class="btn btn-white" href="#checkout">Enviar um Abraço</a>
       </div>
     </header>
 
     <main>
+
+      <!-- HERO -->
       <section id="inicio" class="hero">
-        <a class="hero-banner-link" href="#checkout" aria-label="Enviar um Abraço Agora">
-          <img
-            src="./assets/banner-abrace-deus.png"
-            alt="Campanha Abrace Deus: quando as palavras não bastam, envie um abraço"
-          />
+        <a href="#checkout" class="hero-img-link">
+          <img src="./assets/banner-abrace-deus.png" alt="Campanha Abrace Deus" />
         </a>
-        <div class="hero-overlay" hidden></div>
-        <div class="hero-content visually-hidden">
-          <div class="pill">♡ Campanha Abrace Deus</div>
-          <h1>
-            Quando palavras não bastam,
-            <span>envie um abraço.</span>
-          </h1>
-          <p>
-            O Abrace Deus é um kit surpresa de fé, acolhimento e cuidado para alguém que está
-            passando por luto, tristeza, solidão, enfermidade, ansiedade ou profunda aflição.
-          </p>
+        <div class="hero-tagline">
+          <p>Quando palavras não bastam,</p>
+          <p><em>envie um abraço.</em></p>
         </div>
       </section>
 
-      <section class="section section-dark" id="dor">
-        <div class="narrow center">
-          <h2>A dor <span>não espera.</span></h2>
-          <p class="dark-lead">
-            Quando alguém que amamos está sofrendo, tentamos ajudar com palavras. Mas há momentos
-            em que a dor é grande demais para uma frase.
-          </p>
-          <ul class="pain-list">
-            <li>A crise no meio da noite não espera.</li>
-            <li>O choro escondido não espera.</li>
-            <li>A saudade não espera.</li>
-            <li>A solidão não espera.</li>
-            <li>A angústia não espera.</li>
+      <!-- DOR -->
+      <section class="bloco bloco-dark" id="dor">
+        <div class="dor-titulo">
+          <h2>A dor<br><em>não espera.</em></h2>
+        </div>
+        <div class="dor-corpo">
+          <p class="dor-intro">Quando alguém que amamos está sofrendo, tentamos ajudar com palavras. Mas há momentos em que a dor é grande demais para uma frase.</p>
+          <ul class="dor-lista">
+            <li>A crise no meio da noite</li>
+            <li>O choro escondido</li>
+            <li>A saudade que não passa</li>
+            <li>A solidão invisível</li>
+            <li>A angústia que aperta</li>
           </ul>
-          <p class="statement dark-statement">
-            "Às vezes, a pessoa não precisa de mais uma explicação.<br>Precisa sentir que não foi esquecida."
-          </p>
+          <blockquote class="dor-quote">
+            "Às vezes, a pessoa não precisa de mais uma explicação.<br>
+            Precisa sentir que não foi esquecida."
+          </blockquote>
         </div>
       </section>
 
-      <section class="section" id="sobre">
-        <div class="section-heading center">
-          <h2>O que é o <span>Abrace Deus?</span></h2>
-          <p>
-            Um kit surpresa criado para ser enviado a alguém que está atravessando um momento
-            difícil. Mais do que um presente, é um gesto.
-          </p>
-        </div>
-        <div class="step-grid">
-          <article>
-            <strong>1</strong>
-            <h3>Você escolhe o kit</h3>
-            <p>Selecione a experiência que deseja enviar.</p>
-          </article>
-          <article>
-            <strong>2</strong>
-            <h3>Você escreve uma mensagem</h3>
-            <p>Adicione palavras pessoais de cuidado, fé e presença.</p>
-          </article>
-          <article>
-            <strong>3</strong>
-            <h3>A pessoa recebe a surpresa</h3>
-            <p>O kit chega como um presente especial, sem revelar toda a experiência antes.</p>
-          </article>
-          <article>
-            <strong>4</strong>
-            <h3>Ela encontra acolhimento</h3>
-            <p>Um convite para respirar, abraçar, orar e se sentir lembrada.</p>
-          </article>
+      <!-- COMO FUNCIONA -->
+      <section class="bloco bloco-light" id="sobre">
+        <div class="steps-wrap">
+          <div class="steps-head">
+            <span class="eyebrow">Como funciona</span>
+            <h2>Mais do que um presente,<br><em>é um gesto.</em></h2>
+          </div>
+          <ol class="steps-lista">
+            <li>
+              <div class="step-num">01</div>
+              <div class="step-texto">
+                <h3>Você escolhe o kit</h3>
+                <p>Selecione o tipo de abraço mais adequado para o momento da pessoa.</p>
+              </div>
+            </li>
+            <li>
+              <div class="step-num">02</div>
+              <div class="step-texto">
+                <h3>Você escreve uma mensagem</h3>
+                <p>Palavras pessoais de cuidado, fé e presença, no seu tempo.</p>
+              </div>
+            </li>
+            <li>
+              <div class="step-num">03</div>
+              <div class="step-texto">
+                <h3>A pessoa recebe a surpresa</h3>
+                <p>O kit chega como um presente especial, sem revelar tudo antes.</p>
+              </div>
+            </li>
+            <li>
+              <div class="step-num">04</div>
+              <div class="step-texto">
+                <h3>Ela encontra acolhimento</h3>
+                <p>Um convite para respirar, abraçar, orar e se sentir lembrada.</p>
+              </div>
+            </li>
+          </ol>
         </div>
       </section>
 
-      <section class="section" id="kits">
-        <div class="section-heading center">
-          <h2>Escolha como deseja enviar esse <span>abraço.</span></h2>
-          <p>Cada kit foi pensado para um momento específico de dor, cuidado e acolhimento.</p>
+      <!-- KITS -->
+      <section class="bloco bloco-cream" id="kits">
+        <div class="kits-head">
+          <span class="eyebrow">Os kits</span>
+          <h2>Escolha o abraço<br><em>certo para o momento.</em></h2>
+          <p>Cada kit foi pensado para um tipo específico de dor.</p>
         </div>
-        <div class="product-grid" id="productGrid"></div>
+        <div id="productGrid"></div>
       </section>
 
-      <section class="section section-dark" id="como-usar">
-        <div class="section-heading center">
-          <h2>Um momento simples de fé, <span>respiração e acolhimento</span></h2>
-          <p class="dark-lead">Como usar a experiência Abrace Deus</p>
+      <!-- RITUAL -->
+      <section class="bloco bloco-dark" id="como-usar">
+        <div class="ritual-wrap">
+          <div class="ritual-head">
+            <span class="eyebrow light">A experiência</span>
+            <h2>Um espaço de<br><em>descanso na dor.</em></h2>
+          </div>
+          <ol class="ritual-lista">
+            <li><span class="rn">01</span><span class="rt">Encontre um lugar tranquilo</span></li>
+            <li><span class="rn">02</span><span class="rt">Respire lentamente</span></li>
+            <li><span class="rn">03</span><span class="rt">Segure o presente junto ao corpo</span></li>
+            <li><span class="rn">04</span><span class="rt">Faça uma oração simples</span></li>
+            <li><span class="rn">05</span><span class="rt">Repita: "Deus, o Teu abraço me conforta"</span></li>
+            <li><span class="rn">06</span><span class="rt">Permaneça alguns minutos em silêncio</span></li>
+          </ol>
         </div>
-        <ol class="usage-steps">
-          <li><span>Encontre um lugar tranquilo</span></li>
-          <li><span>Respire lentamente</span></li>
-          <li><span>Segure o presente junto ao corpo</span></li>
-          <li><span>Faça uma oração simples</span></li>
-          <li><span>Repita: "Deus, o Teu abraço me conforta"</span></li>
-          <li><span>Permaneça alguns minutos em silêncio</span></li>
-        </ol>
-        <p class="statement dark-statement center">
-          "Não é sobre resolver tudo em um instante.<br>É sobre criar um pequeno espaço de descanso no meio da dor."
-        </p>
       </section>
 
-      <section class="section two-col" id="doar">
-        <div>
-          <p class="eyebrow">Doação</p>
-          <h2>Doe um abraço para quem talvez <span>não receberia nenhum.</span></h2>
-          <p>
-            Doe kits para pessoas indicadas por instituições parceiras, igrejas, hospitais,
-            casas de apoio, comunidades e projetos sociais.
-          </p>
+      <!-- DOAÇÃO -->
+      <section class="bloco bloco-light form-bloco" id="doar">
+        <div class="form-lado">
+          <span class="eyebrow">Doação</span>
+          <h2>Doe um abraço para quem<br><em>não receberia nenhum.</em></h2>
+          <p>Doe kits para pessoas indicadas por instituições parceiras — igrejas, hospitais, casas de apoio, comunidades e projetos sociais.</p>
         </div>
-        <form class="panel" id="donationForm">
+        <form class="form-painel" id="donationForm">
           <h3>Quantos abraços deseja doar?</h3>
           <div class="donation-options" id="donationOptions"></div>
           <div class="form-row">
@@ -164,21 +151,19 @@
           </div>
           <label>Telefone<input name="donor_phone" /></label>
           <label>Mensagem<textarea name="message" rows="3"></textarea></label>
-          <button class="button primary submit" type="submit">Doar Agora</button>
+          <button class="btn btn-primary full" type="submit">Doar Agora</button>
           <p class="form-status" id="donationStatus" role="status"></p>
         </form>
       </section>
 
-      <section class="section two-col band" id="instituicoes">
-        <div>
-          <p class="eyebrow">Instituições parceiras</p>
-          <h2>Sua instituição conhece pessoas que precisam receber esse <span>abraço?</span></h2>
-          <p>
-            Igrejas, hospitais, casas de apoio, comunidades terapêuticas, projetos sociais e
-            grupos pastorais podem se cadastrar para indicar pessoas.
-          </p>
+      <!-- INSTITUIÇÕES -->
+      <section class="bloco bloco-cream form-bloco" id="instituicoes">
+        <div class="form-lado">
+          <span class="eyebrow">Instituições</span>
+          <h2>Sua instituição conhece quem<br><em>precisa de um abraço?</em></h2>
+          <p>Igrejas, hospitais, casas de apoio, comunidades terapêuticas e grupos pastorais podem se cadastrar para indicar pessoas.</p>
         </div>
-        <form class="panel" id="institutionForm">
+        <form class="form-painel" id="institutionForm">
           <div class="form-row">
             <label>Instituição<input name="institution_name" required /></label>
             <label>Responsável<input name="responsible_name" required /></label>
@@ -192,70 +177,76 @@
             <label>UF<input name="state" maxlength="2" /></label>
           </div>
           <label>Como pretende indicar beneficiários?<textarea name="beneficiary_indication_process" rows="3"></textarea></label>
-          <button class="button primary submit" type="submit">Cadastrar Instituição</button>
+          <button class="btn btn-primary full" type="submit">Cadastrar Instituição</button>
           <p class="form-status" id="institutionStatus" role="status"></p>
         </form>
       </section>
 
-      <section class="section">
-        <div class="section-heading center">
-          <h2>O impacto do <span>Abrace Deus</span></h2>
+      <!-- IMPACTO -->
+      <section class="bloco bloco-dark impacto-bloco">
+        <div class="impacto-head">
+          <h2>O impacto do<br><em>Abrace Deus</em></h2>
         </div>
-        <div class="impact-grid" id="impactGrid"></div>
+        <div class="impacto-stats" id="impactGrid"></div>
       </section>
 
-      <section class="section band">
-        <div class="section-heading center">
-          <h2>Vidas <span>tocadas</span></h2>
+      <!-- DEPOIMENTOS -->
+      <section class="bloco bloco-light" id="depoimentos">
+        <div class="dep-head center">
+          <span class="eyebrow">Vidas tocadas</span>
+          <h2>O que <em>dizem</em> quem recebeu</h2>
         </div>
-        <div class="testimonial-grid" id="testimonialGrid"></div>
+        <div class="dep-grid" id="testimonialGrid"></div>
       </section>
 
-      <section class="section" id="faq">
-        <div class="section-heading center">
-          <h2>Perguntas <span>frequentes</span></h2>
+      <!-- FAQ -->
+      <section class="bloco bloco-cream" id="faq">
+        <div class="faq-head center">
+          <span class="eyebrow">Dúvidas</span>
+          <h2>Perguntas <em>frequentes</em></h2>
         </div>
-        <div class="faq-list" id="faqList"></div>
+        <div class="faq-lista" id="faqList"></div>
       </section>
 
-      <section id="checkout" class="section checkout-section">
-        <div class="checkout-copy">
-          <p class="eyebrow">Checkout seguro</p>
-          <h2>Finalize seu<br><span>Abraço</span></h2>
-          <p>Pagamento via Mercado Pago. PIX ou cartão. O kit é enviado pelo correio ao destinatário escolhido.</p>
-          <ul class="check-list">
+      <!-- CHECKOUT -->
+      <section id="checkout" class="bloco bloco-light checkout-bloco">
+        <div class="checkout-info">
+          <span class="eyebrow">Checkout seguro</span>
+          <h2>Finalize seu<br><em>Abraço</em></h2>
+          <p>Pagamento via Mercado Pago. PIX ou cartão. O kit é enviado pelo correio ao destinatário.</p>
+          <ul class="check-lista">
             <li>PIX e cartão de crédito</li>
             <li>Frete calculado antes do pagamento</li>
             <li>Entrega em todo o Brasil</li>
           </ul>
-          <div class="checkout-trust">
-            <span>🔒 Ambiente seguro</span>
+          <div class="trust-badges">
+            <span>🔒 Seguro</span>
             <span>💳 Mercado Pago</span>
-            <span>📦 Entrega pelos Correios</span>
+            <span>📦 Correios</span>
           </div>
         </div>
 
-        <form class="checkout-form panel" id="checkoutForm" novalidate>
-          <div class="checkout-steps" aria-label="Etapas do checkout">
-            <span class="step active"><span class="step-num">1</span>Produto</span>
-            <span class="step-sep">→</span>
-            <span class="step"><span class="step-num">2</span>Entrega</span>
-            <span class="step-sep">→</span>
-            <span class="step"><span class="step-num">3</span>Pagamento</span>
+        <form class="checkout-form" id="checkoutForm" novalidate>
+          <div class="cf-steps">
+            <span class="cf-step active"><b>1</b> Produto</span>
+            <span class="cf-sep">›</span>
+            <span class="cf-step"><b>2</b> Entrega</span>
+            <span class="cf-sep">›</span>
+            <span class="cf-step"><b>3</b> Pagamento</span>
           </div>
 
-          <div class="form-section">
-            <p class="form-section-title">Qual abraço você quer enviar?</p>
+          <div class="cf-grupo">
+            <p class="cf-grupo-titulo">Qual abraço você quer enviar?</p>
             <div class="form-row">
               <label>Tipo de kit<select name="productId" id="productSelect" required></select></label>
-              <label class="qty-label">Quantidade<input name="quantity" type="number" min="1" value="1" required /></label>
+              <label class="qty-label">Qtd<input name="quantity" type="number" min="1" value="1" required /></label>
             </div>
           </div>
 
-          <div class="form-section">
-            <p class="form-section-title">Seus dados (quem envia)</p>
+          <div class="cf-grupo">
+            <p class="cf-grupo-titulo">Seus dados</p>
             <div class="form-row">
-              <label>Nome completo<input name="name" autocomplete="name" required /></label>
+              <label>Nome<input name="name" autocomplete="name" required /></label>
               <label>E-mail<input name="email" type="email" autocomplete="email" required /></label>
             </div>
             <div class="form-row">
@@ -264,62 +255,59 @@
             </div>
           </div>
 
-          <div class="form-section">
-            <p class="form-section-title">Para quem vai o abraço?</p>
+          <div class="cf-grupo">
+            <p class="cf-grupo-titulo">Para quem é o abraço?</p>
             <div class="form-row">
               <label>Nome do destinatário<input name="recipientName" required /></label>
-              <label>WhatsApp do destinatário<input name="recipientPhone" autocomplete="tel" /></label>
+              <label>WhatsApp<input name="recipientPhone" autocomplete="tel" /></label>
             </div>
             <div class="form-row">
               <label>Motivo<select name="reason" id="reasonSelect"></select></label>
-              <label>Quem assina<input name="signature" placeholder="Seu nome ou anônimo" /></label>
+              <label>Assina como<input name="signature" placeholder="Seu nome ou anônimo" /></label>
             </div>
-            <label>Mensagem pessoal<textarea name="notes" rows="3" placeholder="Escreva suas palavras de cuidado e fé..."></textarea></label>
+            <label>Mensagem pessoal<textarea name="notes" rows="3" placeholder="Palavras de cuidado e fé..."></textarea></label>
           </div>
 
-          <div class="form-section">
-            <p class="form-section-title">Endereço de entrega</p>
+          <div class="cf-grupo">
+            <p class="cf-grupo-titulo">Endereço de entrega</p>
             <div class="form-row">
-              <label>CEP<input name="zipCode" id="zipCode" autocomplete="postal-code" inputmode="numeric" placeholder="00000-000" required /></label>
-              <label>Número<input name="number" autocomplete="address-line2" required /></label>
+              <label>CEP<input name="zipCode" id="zipCode" inputmode="numeric" placeholder="00000-000" required /></label>
+              <label>Número<input name="number" required /></label>
             </div>
-            <label>Rua / Logradouro<input name="address" id="address" autocomplete="street-address" required /></label>
+            <label>Rua<input name="address" id="address" autocomplete="street-address" required /></label>
             <div class="form-row three">
               <label>Bairro<input name="district" id="district" required /></label>
-              <label>Cidade<input name="city" id="city" autocomplete="address-level2" required /></label>
-              <label>UF<input name="state" id="state" maxlength="2" autocomplete="address-level1" required /></label>
+              <label>Cidade<input name="city" id="city" required /></label>
+              <label>UF<input name="state" id="state" maxlength="2" required /></label>
             </div>
-            <label>Complemento<input name="complement" autocomplete="address-line3" /></label>
+            <label>Complemento<input name="complement" /></label>
           </div>
 
-          <label class="checkbox-line">
+          <label class="check-linha">
             <input name="disclaimer" type="checkbox" required />
             <span>Estou ciente de que o Abrace Deus é um item simbólico de fé e acolhimento, não substitui cuidado médico ou psicológico.</span>
           </label>
 
-          <div class="shipping-box">
-            <div>
-              <span>Frete estimado</span>
-              <strong id="shippingAmount">Informe o CEP</strong>
-            </div>
-            <button class="button secondary" type="button" id="calculateShipping">Calcular frete</button>
+          <div class="frete-box">
+            <div><span>Frete</span><strong id="shippingAmount">Informe o CEP</strong></div>
+            <button class="btn btn-outline" type="button" id="calculateShipping">Calcular</button>
           </div>
-
-          <div class="summary" aria-live="polite">
+          <div class="total-box">
             <span>Total com frete</span>
             <strong id="totalAmount">R$ 0,00</strong>
           </div>
 
-          <button class="button primary submit" type="submit">Continuar para pagamento →</button>
+          <button class="btn btn-primary full cf-submit" type="submit">Continuar para pagamento →</button>
           <p class="form-status" id="formStatus" role="status"></p>
         </form>
       </section>
 
-      <section class="payment-panel section" id="paymentPanel" hidden>
+      <!-- PAYMENT -->
+      <section class="payment-panel bloco bloco-light" id="paymentPanel" hidden>
         <div>
-          <p class="eyebrow">Pagamento seguro</p>
-          <h2>Escolha como pagar</h2>
-          <p>Use PIX ou cartão de crédito pelo Mercado Pago. O status retorna para o pedido no Supabase.</p>
+          <span class="eyebrow">Pagamento seguro</span>
+          <h2>Escolha como <em>pagar</em></h2>
+          <p>PIX ou cartão de crédito pelo Mercado Pago.</p>
           <dl class="order-meta">
             <div><dt>Pedido</dt><dd id="orderId">-</dd></div>
             <div><dt>Valor</dt><dd id="paymentAmount">-</dd></div>
@@ -331,26 +319,30 @@
         </div>
       </section>
 
-      <section class="section section-dark final-cta">
+      <!-- CTA FINAL -->
+      <section class="bloco bloco-dark cta-final">
         <h2>Abrace Deus.</h2>
         <p>Quando palavras não bastam, envie um abraço.</p>
-        <a class="button primary" href="#checkout">Enviar um Abraço Agora</a>
+        <a class="btn btn-white" href="#checkout">Enviar um Abraço Agora</a>
       </section>
+
     </main>
 
-    <footer>
-      <div>
+    <footer class="rodape">
+      <div class="rodape-marca">
         <strong>Abrace Deus</strong>
-        <p>Campanha Sobem. Pagamento seguro via Mercado Pago.</p>
+        <p>Uma campanha Sobem. Pagamento seguro via Mercado Pago.</p>
       </div>
-      <div class="footer-links">
-        <a href="https://wa.me/5511977612546" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-        <a href="https://instagram.com/abracedeus" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <nav class="rodape-links">
+        <a href="https://wa.me/5511977612546" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="https://instagram.com/abracedeus" target="_blank" rel="noopener">Instagram</a>
         <a href="mailto:nucleodemissoes@sobem.ong.br">E-mail</a>
-      </div>
+      </nav>
     </footer>
 
-    <a class="whatsapp" href="https://wa.me/5511977612546?text=Ol%C3%A1%2C%20quero%20saber%20mais%20sobre%20a%20campanha%20Abrace%20Deus." target="_blank" rel="noopener noreferrer" aria-label="Fale conosco pelo WhatsApp">☏</a>
+    <a class="wpp-fab" href="https://wa.me/5511977612546?text=Ol%C3%A1%2C%20quero%20saber%20mais%20sobre%20o%20Abrace%20Deus." target="_blank" rel="noopener" aria-label="WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://sdk.mercadopago.com/js/v2"></script>
