@@ -218,75 +218,99 @@
         <div class="faq-list" id="faqList"></div>
       </section>
 
-      <section id="checkout" class="section checkout-section commerce-checkout">
+      <section id="checkout" class="section checkout-section">
         <div class="checkout-copy">
           <p class="eyebrow">Checkout seguro</p>
-          <h2>Finalize sua compra</h2>
-          <p>
-            Compra estruturada com dados do cliente, entrega, frete e pagamento via Mercado Pago.
-            O pedido fica registrado no Supabase para separação, conferência e envio.
-          </p>
+          <h2>Finalize seu<br><span>Abraço</span></h2>
+          <p>Pagamento via Mercado Pago. PIX ou cartão. O kit é enviado pelo correio ao destinatário escolhido.</p>
           <ul class="check-list">
-            <li>PIX e cartão de crédito no checkout oficial</li>
-            <li>Cálculo de frete antes do pagamento</li>
-            <li>Endereço completo de entrega no pedido</li>
+            <li>PIX e cartão de crédito</li>
+            <li>Frete calculado antes do pagamento</li>
+            <li>Entrega em todo o Brasil</li>
           </ul>
+          <div class="checkout-trust">
+            <span>🔒 Ambiente seguro</span>
+            <span>💳 Mercado Pago</span>
+            <span>📦 Entrega pelos Correios</span>
+          </div>
         </div>
 
-        <form class="checkout panel" id="checkoutForm" novalidate>
+        <form class="checkout-form panel" id="checkoutForm" novalidate>
           <div class="checkout-steps" aria-label="Etapas do checkout">
-            <span class="active">1. Produto</span>
-            <span>2. Entrega</span>
-            <span>3. Pagamento</span>
+            <span class="step active"><span class="step-num">1</span>Produto</span>
+            <span class="step-sep">→</span>
+            <span class="step"><span class="step-num">2</span>Entrega</span>
+            <span class="step-sep">→</span>
+            <span class="step"><span class="step-num">3</span>Pagamento</span>
           </div>
-          <div class="form-row">
-            <label>Produto<select name="productId" id="productSelect" required></select></label>
-            <label>Quantidade<input name="quantity" type="number" min="1" value="1" required /></label>
+
+          <div class="form-section">
+            <p class="form-section-title">Qual abraço você quer enviar?</p>
+            <div class="form-row">
+              <label>Tipo de kit<select name="productId" id="productSelect" required></select></label>
+              <label class="qty-label">Quantidade<input name="quantity" type="number" min="1" value="1" required /></label>
+            </div>
           </div>
-          <div class="form-row">
-            <label>Seu nome<input name="name" autocomplete="name" required /></label>
-            <label>Seu e-mail<input name="email" type="email" autocomplete="email" required /></label>
+
+          <div class="form-section">
+            <p class="form-section-title">Seus dados (quem envia)</p>
+            <div class="form-row">
+              <label>Nome completo<input name="name" autocomplete="name" required /></label>
+              <label>E-mail<input name="email" type="email" autocomplete="email" required /></label>
+            </div>
+            <div class="form-row">
+              <label>WhatsApp<input name="phone" autocomplete="tel" required /></label>
+              <label>CPF<input name="buyerCpf" inputmode="numeric" placeholder="000.000.000-00" required /></label>
+            </div>
           </div>
-          <div class="form-row">
-            <label>WhatsApp<input name="phone" autocomplete="tel" required /></label>
-            <label>CPF do comprador<input name="buyerCpf" inputmode="numeric" required /></label>
+
+          <div class="form-section">
+            <p class="form-section-title">Para quem vai o abraço?</p>
+            <div class="form-row">
+              <label>Nome do destinatário<input name="recipientName" required /></label>
+              <label>WhatsApp do destinatário<input name="recipientPhone" autocomplete="tel" /></label>
+            </div>
+            <div class="form-row">
+              <label>Motivo<select name="reason" id="reasonSelect"></select></label>
+              <label>Quem assina<input name="signature" placeholder="Seu nome ou anônimo" /></label>
+            </div>
+            <label>Mensagem pessoal<textarea name="notes" rows="3" placeholder="Escreva suas palavras de cuidado e fé..."></textarea></label>
           </div>
-          <div class="form-row">
-            <label>Nome do destinatário<input name="recipientName" required /></label>
-            <label>WhatsApp do destinatário<input name="recipientPhone" autocomplete="tel" /></label>
+
+          <div class="form-section">
+            <p class="form-section-title">Endereço de entrega</p>
+            <div class="form-row">
+              <label>CEP<input name="zipCode" id="zipCode" autocomplete="postal-code" inputmode="numeric" placeholder="00000-000" required /></label>
+              <label>Número<input name="number" autocomplete="address-line2" required /></label>
+            </div>
+            <label>Rua / Logradouro<input name="address" id="address" autocomplete="street-address" required /></label>
+            <div class="form-row three">
+              <label>Bairro<input name="district" id="district" required /></label>
+              <label>Cidade<input name="city" id="city" autocomplete="address-level2" required /></label>
+              <label>UF<input name="state" id="state" maxlength="2" autocomplete="address-level1" required /></label>
+            </div>
+            <label>Complemento<input name="complement" autocomplete="address-line3" /></label>
           </div>
-          <div class="form-row">
-            <label>Motivo<select name="reason" id="reasonSelect"></select></label>
-            <label>Quem assina a mensagem<input name="signature" placeholder="Seu nome ou deixe em branco" /></label>
-          </div>
-          <div class="form-row">
-            <label>CEP<input name="zipCode" id="zipCode" autocomplete="postal-code" inputmode="numeric" required /></label>
-            <label>Número<input name="number" autocomplete="address-line2" required /></label>
-          </div>
-          <label>Endereço de entrega<input name="address" id="address" autocomplete="street-address" required /></label>
-          <div class="form-row three">
-            <label>Bairro<input name="district" id="district" required /></label>
-            <label>Cidade<input name="city" id="city" autocomplete="address-level2" required /></label>
-            <label>UF<input name="state" id="state" maxlength="2" autocomplete="address-level1" required /></label>
-          </div>
-          <label>Complemento<input name="complement" autocomplete="address-line3" /></label>
-          <label>Mensagem pessoal<textarea name="notes" rows="3" placeholder="Sua mensagem de cuidado e fé."></textarea></label>
+
           <label class="checkbox-line">
             <input name="disclaimer" type="checkbox" required />
-            <span>Declaro estar ciente de que o Abrace Deus é um item simbólico de fé e acolhimento.</span>
+            <span>Estou ciente de que o Abrace Deus é um item simbólico de fé e acolhimento, não substitui cuidado médico ou psicológico.</span>
           </label>
+
           <div class="shipping-box">
             <div>
-              <span>Frete</span>
+              <span>Frete estimado</span>
               <strong id="shippingAmount">Informe o CEP</strong>
             </div>
             <button class="button secondary" type="button" id="calculateShipping">Calcular frete</button>
           </div>
+
           <div class="summary" aria-live="polite">
             <span>Total com frete</span>
             <strong id="totalAmount">R$ 0,00</strong>
           </div>
-          <button class="button primary submit" type="submit">Continuar para pagamento</button>
+
+          <button class="button primary submit" type="submit">Continuar para pagamento →</button>
           <p class="form-status" id="formStatus" role="status"></p>
         </form>
       </section>

@@ -54,10 +54,13 @@ type NormalizedOrder = {
 };
 
 const products: Product[] = [
-  { id: "teste-producao", name: "Teste de Producao", price: 500 },
-  { id: "abraco-essencial", name: "Abraço Essencial", price: 6990 },
-  { id: "abraco-luto", name: "Abraço para Luto", price: 8990 },
-  { id: "doe-um-abraco", name: "Doe um Abraço", price: 4990 }
+  { id: "abraco-tristeza",   name: "Abraço para Tristeza",         price: 5990 },
+  { id: "abraco-ansiedade",  name: "Abraço para Ansiedade",        price: 6990 },
+  { id: "abraco-solidao",    name: "Abraço para Solidão",          price: 7490 },
+  { id: "abraco-enfermidade",name: "Abraço para Enfermidade",      price: 7990 },
+  { id: "abraco-luto",       name: "Abraço para Luto",             price: 8990 },
+  { id: "abraco-aflicao",    name: "Abraço na Profunda Aflição",   price: 9990 },
+  { id: "doe-um-abraco",     name: "Doe um Abraço",                price: 4990 }
 ];
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
@@ -184,10 +187,16 @@ function stateNameFromUf(state: unknown) {
 }
 
 function productDescription(productId: unknown) {
-  if (productId === "teste-producao") return "Produto temporario para validacao de pagamento real.";
-  if (productId === "abraco-luto") return "Kit surpresa de fe e acolhimento para momentos de luto.";
-  if (productId === "doe-um-abraco") return "Doacao de kit para pessoas indicadas por instituicoes parceiras.";
-  return "Kit surpresa de fe, acolhimento e cuidado.";
+  const descriptions: Record<string, string> = {
+    "abraco-tristeza":    "Kit surpresa de fe e acolhimento para momentos de tristeza.",
+    "abraco-ansiedade":   "Kit surpresa de fe e acolhimento para momentos de ansiedade.",
+    "abraco-solidao":     "Kit surpresa de fe e acolhimento para momentos de solidao.",
+    "abraco-enfermidade": "Kit surpresa de fe e acolhimento para momentos de enfermidade.",
+    "abraco-luto":        "Kit surpresa de fe e acolhimento para momentos de luto.",
+    "abraco-aflicao":     "Kit surpresa de fe e acolhimento para momentos de profunda aflicao.",
+    "doe-um-abraco":      "Doacao de kit para pessoas indicadas por instituicoes parceiras."
+  };
+  return descriptions[String(productId || "")] || "Kit surpresa de fe, acolhimento e cuidado.";
 }
 
 function makeOrderId() {

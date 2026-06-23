@@ -285,20 +285,46 @@
   }
 
   function renderProducts() {
-    productGrid.innerHTML = products.map((product, index) => `
-      <article class="product-card">
-        <div class="product-image">
-          <img src="${product.imageUrl}" alt="${product.name}" loading="${index === 0 ? "eager" : "lazy"}" />
+    productGrid.innerHTML = `
+      <div class="kit-showcase">
+        <div class="kit-image-wrap">
+          <img src="${kitImageUrl}" alt="Kit Abrace Deus" loading="eager" />
         </div>
-        <span class="category">${product.category}</span>
-        <h3>${product.name}</h3>
-        <p>${product.description}</p>
-        <div class="card-footer">
-          <span class="price">${centsToMoney(product.price)}</span>
-          <a class="button primary" href="#checkout" data-product="${product.id}">${product.cta}</a>
+        <div class="kit-intro">
+          <span class="category">Kit surpresa</span>
+          <h3>O Kit Abrace Deus</h3>
+          <p>Uma experiência cuidadosamente pensada de fé e acolhimento. O kit chega como um presente especial, sem revelar toda a experiência antes. Escolha abaixo o tipo mais adequado para quem vai receber.</p>
+          <a class="button primary" href="#checkout">Enviar um Abraço</a>
         </div>
-      </article>
-    `).join("");
+      </div>
+      <div class="products-table-wrap">
+        <table class="products-table">
+          <thead>
+            <tr>
+              <th>Tipo de abraço</th>
+              <th>Para quem é indicado</th>
+              <th>Preço</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${products.map((product) => `
+              <tr>
+                <td>
+                  <span class="row-tag">${product.category}</span>
+                  <strong class="row-name">${product.name}</strong>
+                </td>
+                <td class="row-desc">${product.description}</td>
+                <td class="row-price">${centsToMoney(product.price)}</td>
+                <td class="row-action">
+                  <a class="button primary table-btn" href="#checkout" data-product="${product.id}">${product.cta}</a>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
 
     productSelect.innerHTML = products
       .map((product) => `<option value="${product.id}">${product.name}</option>`)
